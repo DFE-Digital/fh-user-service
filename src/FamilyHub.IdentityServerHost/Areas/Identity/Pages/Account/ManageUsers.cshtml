@@ -1,0 +1,125 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account.ManageUsersModel
+@{
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <form method="post">
+
+            <fieldset class="govuk-fieldset">
+                <h1 class="govuk-heading-m">
+                    Users
+                </h1>
+            </fieldset>
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
+                    <p>
+                    <a asp-page="./WhichOrganisations" asp-route-returnUrl="@Model.ReturnUrl">Register a new user</a>
+                    </p>
+                    @if(User.IsInRole("DfEAdmin"))
+                    {
+                        <p>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register a new user with no organisation</a>
+                        </p>
+                        
+                    }
+                </div>
+                <br>
+                
+                <div class="govuk-form-group">
+                    <input class="govuk-input govuk-input govuk-!-width-one-half" id="search" asp-for="Search" type="text">
+                    <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                        Search
+                    </button>
+                </div>
+
+                @*<button type="submit" asp-page-handler="Register New User" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Register New User
+                </button>*@
+            </fieldset>
+
+        
+
+            @if (@Model.Users != null && @Model.Users.Items.Any())
+            {
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header">Name</th>
+                            <th scope="col" class="govuk-table__header">Email</th>
+                            <th scope="col" class="govuk-table__header">Roles</th>
+                            <th scope="col" class="govuk-table__header">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @foreach (var item in @Model.Users.Items)
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">@item.UserName</th>
+                                <td class="govuk-table__cell">@item.Email</td>
+                                <td class="govuk-table__cell">@item.Roles</td>
+                                <td class="govuk-table__cell">
+                                    <button asp-page-handler="ResetPassword" asp-route-id="@item.Email" class="govuk-button govuk-!-font-weight-bold govuk-body govuk-!-font-size-16" data-module="govuk-button">Reset Password</button>
+                                    <button asp-page-handler="DeleteUser" asp-route-id="@item.Id" class="govuk-button govuk-button--warning" data-module="govuk-button">
+                                        Delete account
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <nav class="govuk-pagination" role="navigation" aria-label="results">
+                    @if(Model.PageNumber > 1)
+                    {
+                        <div class="govuk-pagination__prev">
+                            <a class="govuk-link govuk-pagination__link" asp-page="./ManageUsers" asp-route-pageNumber="@(Model.PageNumber - 1)" rel="prev">
+                                <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                                    <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
+                                </svg>
+                                <span class="govuk-pagination__link-title">Previous</span>
+                            </a>
+                        </div>
+                    }
+                    <ul class="govuk-pagination__list">
+                        @for(int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            string pageLable = $"Page {i}";
+                            if (Model.PageNumber == i)
+                            {
+                                <li class="govuk-pagination__item govuk-pagination__item--current">
+                                    <a class="govuk-link govuk-pagination__link" asp-page="./ManageUsers" asp-route-pageNumber="@i" aria-label="@pageLable" aria-current="page">
+                                        @i
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="govuk-pagination__item">
+                                    <a class="govuk-link govuk-pagination__link" asp-page="./ManageUsers" asp-route-pageNumber="@i" aria-label="@pageLable">
+                                        @i
+                                    </a>
+                                </li>
+                            }
+                            
+                        }
+                       
+                    </ul>
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <div class="govuk-pagination__next">
+                            <a class="govuk-link govuk-pagination__link" asp-page="./ManageUsers" asp-route-pageNumber="@(Model.PageNumber + 1)" rel="next">
+                                <span class="govuk-pagination__link-title">Next</span>
+                                <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                                    <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    } 
+                </nav>
+            }
+        </form>
+    </div>
+</main>
+

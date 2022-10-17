@@ -1,0 +1,39 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Pages.Organisations.ViewOrganisationListModel
+@{
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <h1 class="govuk-heading-xl">Manage your organisations</h1>
+    <p>View, change an organisation.</p>
+
+    <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--l">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <table class="govuk-table">
+                @*<caption class="govuk-table__caption govuk-table__caption--m">Your organisations</caption>*@
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Organisation</th>
+                        <th scope="col" class="govuk-table__header"></th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var organisation in Model.OpenReferralOrganisations)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@organisation.Name</td>
+                            <td class="govuk-table__cell" style="text-align: right">
+                                <a asp-page="/Organisations/OrganisationViewEdit" asp-route-id="@organisation.Id" class="govuk-!-margin-right-1">View</a>
+                                @*<a href="remove-service" class="govuk-!-margin-right-0">Delete</a>*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
