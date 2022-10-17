@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FB87F5D0-F2A3-42A3-8D96-7F1AB9B21529}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHub.IdentityServerHost", "src\FamilyHub.IdentityServerHost\FamilyHub.IdentityServerHost.csproj", "{90F825AC-DBDB-4AC2-B8EA-20DD18C318BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90F825AC-DBDB-4AC2-B8EA-20DD18C318BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90F825AC-DBDB-4AC2-B8EA-20DD18C318BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90F825AC-DBDB-4AC2-B8EA-20DD18C318BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90F825AC-DBDB-4AC2-B8EA-20DD18C318BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{90F825AC-DBDB-4AC2-B8EA-20DD18C318BE} = {FB87F5D0-F2A3-42A3-8D96-7F1AB9B21529}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D9DFF51-07A2-4212-837D-70AE387FBCF4}
+	EndGlobalSection
+EndGlobal

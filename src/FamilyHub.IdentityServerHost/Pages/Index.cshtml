@@ -1,0 +1,38 @@
+﻿
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<FamilyHub.IdentityServerHost.Models.Entities.ApplicationIdentityUser> SignInManager
+@inject UserManager<FamilyHub.IdentityServerHost.Models.Entities.ApplicationIdentityUser> UserManager
+
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Admin UI Portal</h1>
+   @* <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <p>
+            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage personnal details: @UserManager.GetUserName(User)</a>
+        </p>
+
+        @if (User.IsInRole("DfEAdmin") || User.IsInRole("LAAdmin") || User.IsInRole("VCSAdmin"))
+        {
+            <p>
+                <a asp-area="Identity" asp-page="/Account/ManageUsers" asp-route-pageNumber="1">Manage users</a>
+            </p>
+        }
+
+        @if (User.IsInRole("DfEAdmin") || User.IsInRole("LAAdmin"))
+        {
+            <p>
+                <a asp-page="/Organisations/OrganisationsStartPage">Organisations</a>
+            </p>
+        }
+    }
+</div>
