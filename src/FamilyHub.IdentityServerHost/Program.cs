@@ -31,8 +31,6 @@ else
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 }
 
-
-
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseSqlServer(connectionString));
 
@@ -44,10 +42,15 @@ builder.Services.AddTransient<IApplicationDbContext,ApplicationDbContext>();
 builder.Services.AddTransient<ApplicationDbContextInitialiser>();
 builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
 
+
 bool isEmailEnabled = builder.Configuration.GetValue<bool>("EmailSetting:IsEmailEnabled");
 if (isEmailEnabled)
 {
     builder.Services.AddTransient<IEmailSender, EmailSender>();
+}
+else
+{
+    builder.Services.AddTransient<IEmailSender, GovNotifySender>();
 }
 
 builder.Services.AddControllers();

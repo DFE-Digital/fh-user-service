@@ -86,7 +86,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
         public List<string> RoleSelection { get; set; } = default!;
 
         [BindProperty]
-        public string? Organisations { get; set; }
+        public string Organisations { get; set; } = default!;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
