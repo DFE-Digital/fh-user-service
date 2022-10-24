@@ -39,8 +39,9 @@
                                 }
 
                                 <div class="govuk-form-group">
-                                    <label for="LanguageCode@(i)" class="govuk-label">Select an organisation</label>
-                                    <select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>
+                                    <label for="OrganisationCode@(i)" class="govuk-label">Select an organisation</label>
+                                    @*<select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>*@
+                                      <select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>
                                 </div>
 
                                 @if (@Model.OrganisationNumber > 1)

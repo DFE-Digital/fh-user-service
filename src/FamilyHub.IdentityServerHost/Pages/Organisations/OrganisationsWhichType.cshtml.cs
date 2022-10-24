@@ -37,10 +37,12 @@ public class OrganisationsWhichTypeModel : PageModel
         if (organisationTypes != null)
         {
             OrganisationTypeList = organisationTypes.Select(x => new SelectListItem { Text = x.Description, Value = x.Id }).ToList();
+            SelectedOrganisationType = OrganisationTypeList[0].Value;
         }
 
         var authorityList = StaticData.AuthorityCache.Select(x => new SelectListItem { Text = x.Value, Value = x.Key }).ToList();
         AuthorityList = authorityList.OrderBy(x => x.Text).ToList();
+        SelectedAuthority = authorityList[0].Value;
 
         if (!string.IsNullOrEmpty(OrganisationId))
         {
@@ -54,10 +56,18 @@ public class OrganisationsWhichTypeModel : PageModel
             if (!string.IsNullOrEmpty(authorityCode))
                 SelectedAuthority = authorityCode;
         }
+
+        ModelState.Clear();
     }
 
     public IActionResult OnPost()
     {
+        ModelState.Remove("OrganisationId");
+
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
         return RedirectToPage("/Organisations/OrganisationViewEdit", new
         {
             id = OrganisationId,

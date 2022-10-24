@@ -72,10 +72,15 @@ public class WhichOrganisationsModel : PageModel
         var list = await _apiService.GetListOpenReferralOrganisations();
         OrganisationSelectionList = list.OrderBy(x => x.Name).Select(c => new SelectListItem() { Text = c.Name, Value = c.Id }).ToList();
 
-        if (Organisations != null && Organisations.Any())
+        if (Organisations != null)
         {
             OrganisationCode = Organisations;
             OrganisationNumber = OrganisationCode.Count();
+        }
+        else
+        {
+            OrganisationCode.Add("Select organisation");
+            OrganisationNumber = OrganisationCode.Count;
         }
     }
 
