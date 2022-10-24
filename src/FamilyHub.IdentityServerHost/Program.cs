@@ -1,14 +1,25 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using FamilyHub.IdentityServerHost.Persistence.Repository;
-using Microsoft.AspNetCore.Builder;
-using FamilyHub.IdentityServerHost.Services;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using FamilyHub.IdentityServerHost.Models.Entities;
-using System.Configuration;
+using FamilyHub.IdentityServerHost.Persistence.Repository;
+using FamilyHub.IdentityServerHost.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics())
+.ConfigureServices(serviceCollection => serviceCollection
+    .Configure<AzureFileLoggerOptions>(options =>
+    {
+        options.FileName = "azure-diagnostics-";
+        options.FileSizeLimit = 50 * 1024;
+        options.RetainedFileCountLimit = 5;
+    }).Configure<AzureBlobLoggerOptions>(options =>
+    {
+        options.BlobName = "log.txt";
+    })
+);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 

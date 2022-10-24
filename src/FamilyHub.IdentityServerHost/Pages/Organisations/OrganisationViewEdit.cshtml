@@ -7,6 +7,10 @@
 
     <div class="govuk-grid-row">
         <form method="post">
+
+            <input asp-for="@Model.OrgansationTypeId" name="UserId" type="hidden" />
+            <input asp-for="@Model.AuthorityCode" name="UserId" type="hidden" />
+
             <fieldset class="govuk-fieldset">
                 <h1 class="govuk-heading-m">
                     Organisation
@@ -55,3 +59,7 @@
 
 
 </main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
