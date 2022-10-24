@@ -20,7 +20,7 @@ public class WhichOrganisationsModel : PageModel
     public int OrganisationNumber { get; set; } = 1;
 
     [BindProperty]
-    public List<string> OrganisationCode { get; set; } = default!;
+    public List<string> OrganisationCode { get; set; } = new List<string>();
 
     [BindProperty]
     public List<string>? Organisations { get; set; } = default!;
