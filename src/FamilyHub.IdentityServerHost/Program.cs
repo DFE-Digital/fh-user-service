@@ -23,7 +23,12 @@ builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics())
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 
-if (builder.Configuration.GetValue<string>("UseDbType") == "SqlLite")
+if (builder.Configuration.GetValue<string>("UseDbType") == "UseInMemoryDatabase")
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseInMemoryDatabase("FH-IdentityDb"));
+}
+else if (builder.Configuration.GetValue<string>("UseDbType") == "SqlLite")
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
