@@ -83,10 +83,10 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
         public List<IdentityRole> AvailableRoles { get; set; } = default(List<IdentityRole>);
 
         [BindProperty]
-        public List<string> RoleSelection { get; set; } = default!;
+        public string RoleSelection { get; set; } = default!;
 
         [BindProperty]
-        public string? Organisations { get; set; }
+        public string Organisations { get; set; } = default!;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -284,7 +284,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
 
         private async Task AddUserRoles(ApplicationIdentityUser user)
         {
-            if (RoleSelection == null || !RoleSelection.Any())
+            if (string.IsNullOrEmpty(RoleSelection))
             {
                 return;
             }
@@ -301,13 +301,10 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
             {
                 throw new Exception(result.Errors.First().Description);
             }
-            foreach(var role in RoleSelection)
+            result = await _userManager.AddToRoleAsync(user, RoleSelection);
+            if (!result.Succeeded)
             {
-                result = await _userManager.AddToRoleAsync(user, role);
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
+                throw new Exception(result.Errors.First().Description);
             }
         }
     }

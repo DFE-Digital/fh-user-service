@@ -44,6 +44,12 @@ public class ApplicationDbContextInitialiser
     {
         try
         {
+            if (_context.Database.IsInMemory())
+            {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+            }
+
             if (_context.Database.IsSqlServer() || _context.Database.IsNpgsql())
             {
                 //if (configuration.GetValue<bool>("RecreateDbOnStartup"))

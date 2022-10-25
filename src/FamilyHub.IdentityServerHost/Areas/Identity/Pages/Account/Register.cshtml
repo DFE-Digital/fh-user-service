@@ -34,8 +34,8 @@
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
     <div class="govuk-grid-row">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
         <div class="column1">
-            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                 <input asp-for="@Model.Organisations" type="hidden">
                 <h2>Create a new account.</h2>
                 <hr />
@@ -68,13 +68,36 @@
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
                 <button id="registerSubmit" type="submit" class="govuk-button">Register</button>
-            </form>
         </div>
         <div class="column2">
             <section>
                 <h3>Available Roles.</h3>
                 <hr />
                 <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                Select Role?
+                            </h1>
+                        </legend>
+                        <div class="govuk-radios" data-module="govuk-radios">
+
+                            @foreach (var item in @Model.AvailableRoles)
+                            {
+                                <div class="govuk-radios__item">
+                                    <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@item.Name" />
+                                    <label class="govuk-label govuk-radios__label">
+                                        @item.Name
+                                    </label>
+                                    <span asp-validation-for="RoleSelection" class="text-danger"></span>
+                                </div>
+                            }
+                        </div>
+
+                    </fieldset>
+                </div>
+
+                @*<div class="govuk-form-group">
                     <div id="type-hint" class="govuk-hint">
                         Select all that apply.
                     </div>
@@ -91,9 +114,10 @@
 
                         }
                     </div>
-                </div>
+                </div>*@
             </section>
         </div>
+        </form>
     </div>
 </main>
 

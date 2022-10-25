@@ -20,7 +20,7 @@ public class WhichOrganisationsModel : PageModel
     public int OrganisationNumber { get; set; } = 1;
 
     [BindProperty]
-    public List<string> OrganisationCode { get; set; } = default!;
+    public List<string> OrganisationCode { get; set; } = new List<string>();
 
     [BindProperty]
     public List<string>? Organisations { get; set; } = default!;
@@ -72,10 +72,15 @@ public class WhichOrganisationsModel : PageModel
         var list = await _apiService.GetListOpenReferralOrganisations();
         OrganisationSelectionList = list.OrderBy(x => x.Name).Select(c => new SelectListItem() { Text = c.Name, Value = c.Id }).ToList();
 
-        if (Organisations != null && Organisations.Any())
+        if (Organisations != null)
         {
             OrganisationCode = Organisations;
             OrganisationNumber = OrganisationCode.Count();
+        }
+        else
+        {
+            OrganisationCode.Add("Select organisation");
+            OrganisationNumber = OrganisationCode.Count;
         }
     }
 

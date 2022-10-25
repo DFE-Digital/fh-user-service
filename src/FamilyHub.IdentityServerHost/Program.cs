@@ -1,18 +1,34 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using FamilyHub.IdentityServerHost.Persistence.Repository;
-using Microsoft.AspNetCore.Builder;
-using FamilyHub.IdentityServerHost.Services;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using FamilyHub.IdentityServerHost.Models.Entities;
-using System.Configuration;
+using FamilyHub.IdentityServerHost.Persistence.Repository;
+using FamilyHub.IdentityServerHost.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics())
+.ConfigureServices(serviceCollection => serviceCollection
+    .Configure<AzureFileLoggerOptions>(options =>
+    {
+        options.FileName = "azure-diagnostics-";
+        options.FileSizeLimit = 50 * 1024;
+        options.RetainedFileCountLimit = 5;
+    }).Configure<AzureBlobLoggerOptions>(options =>
+    {
+        options.BlobName = "log.txt";
+    })
+);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 
-if (builder.Configuration.GetValue<string>("UseDbType") == "SqlLite")
+if (builder.Configuration.GetValue<string>("UseDbType") == "UseInMemoryDatabase")
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseInMemoryDatabase("FH-IdentityDb"));
+}
+else if (builder.Configuration.GetValue<string>("UseDbType") == "SqlLite")
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -31,8 +47,6 @@ else
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 }
 
-
-
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseSqlServer(connectionString));
 
@@ -44,10 +58,15 @@ builder.Services.AddTransient<IApplicationDbContext,ApplicationDbContext>();
 builder.Services.AddTransient<ApplicationDbContextInitialiser>();
 builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
 
+
 bool isEmailEnabled = builder.Configuration.GetValue<bool>("EmailSetting:IsEmailEnabled");
 if (isEmailEnabled)
 {
     builder.Services.AddTransient<IEmailSender, EmailSender>();
+}
+else
+{
+    builder.Services.AddTransient<IEmailSender, GovNotifySender>();
 }
 
 builder.Services.AddControllers();

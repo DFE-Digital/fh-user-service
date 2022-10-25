@@ -1,12 +1,11 @@
 using FamilyHub.IdentityServerHost.Services;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Policy;
-using System.Xml.Linq;
 
 namespace FamilyHub.IdentityServerHost.Pages.Organisations;
 
@@ -39,8 +38,18 @@ public class OrganisationViewEditModel : PageModel
         [DataType(DataType.Url)]
         public string? Url { get; set; }
     }
-    public async Task OnGet(string id)
+
+    [BindProperty]
+    public string OrgansationTypeId { get; set; } = default!;
+    [BindProperty]
+    public string AuthorityCode { get; set; } = default!;
+
+    public async Task OnGet(string id, string organisationTypeId, string authorityCode)
     {
+        
+        OrgansationTypeId = organisationTypeId;
+        AuthorityCode = authorityCode;
+
         if (!string.IsNullOrEmpty(id))
         {
             var apiOrganisation = await _apiService.GetOpenReferralOrganisationById(id);
@@ -77,7 +86,24 @@ public class OrganisationViewEditModel : PageModel
         if (!ModelState.IsValid)
             return Page();
 
-        OpenReferralOrganisationWithServicesDto openReferralOrganisationWithServicesDto = new(Organisation.Id, Organisation.Name, Organisation.Description, Organisation.Logo, Organisation.Url, Organisation.Url, new List<OpenReferralServiceDto>());
+        OrganisationTypeDto organisationType = default!;
+        var organisationTypes = await _apiService.GetListOrganisationTypes();
+        if (organisationTypes != null)
+        {
+            var orgType = organisationTypes.FirstOrDefault(x => x.Id == OrgansationTypeId);
+            if (orgType != null)
+                organisationType = orgType;
+        }
+
+        if (organisationType == null)
+        {
+            ModelState.AddModelError(String.Empty, "Unable to find orgaisation type");
+            return Page();
+        }
+            
+
+        OpenReferralOrganisationWithServicesDto openReferralOrganisationWithServicesDto = new(Organisation.Id, organisationType, Organisation.Name, Organisation.Description, Organisation.Logo, Organisation.Url, Organisation.Url, new List<OpenReferralServiceDto>());
+        openReferralOrganisationWithServicesDto.AdministractiveDistrictCode = AuthorityCode;
 
         if (!string.IsNullOrEmpty(Organisation.Id))
         {

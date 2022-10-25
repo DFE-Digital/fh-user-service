@@ -25,7 +25,7 @@
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">@organisation.Name</td>
                             <td class="govuk-table__cell" style="text-align: right">
-                                <a asp-page="/Organisations/OrganisationViewEdit" asp-route-id="@organisation.Id" class="govuk-!-margin-right-1">View</a>
+                                <a asp-page="/Organisations/OrganisationsWhichType" asp-route-id="@organisation.Id" class="govuk-!-margin-right-1">View</a>
                                 @*<a href="remove-service" class="govuk-!-margin-right-0">Delete</a>*@
                             </td>
                         </tr>
@@ -36,4 +36,8 @@
     </div>
 
 </main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 
