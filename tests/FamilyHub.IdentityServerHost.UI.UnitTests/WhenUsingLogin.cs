@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Collections.Generic;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests;
 public class WhenUsingLogin
@@ -67,10 +67,101 @@ public class WhenUsingLogin
         _signInManagerMock.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(Task.FromResult(new Microsoft.AspNetCore.Identity.SignInResult()));
 
         //Act
-        var result = await _loginModel.OnPostAsync("~/");
+        var result = await _loginModel.OnPostAsync("~/") as PageResult;
 
         // Assert
         result.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(result, nameof(result));
+        result.Page.Should().BeNull();
 
+    }
+
+    [Fact]
+    public async Task WhenEmailAndPasswordAreOK_RedirectUrlIsReturned()
+    {
+        // Arrange
+        _loginModel.Input = new FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account.LoginModel.InputModel();
+        _loginModel.Input.Email = "someone@email.com";
+        _loginModel.Input.Password = "Pas$123";
+
+        Microsoft.AspNetCore.Identity.SignInResult signInResult = new();
+        if (typeof(Microsoft.AspNetCore.Identity.SignInResult) != null && typeof(Microsoft.AspNetCore.Identity.SignInResult).GetProperty("Succeeded") != null)
+        {
+            var signInResultClass = typeof(Microsoft.AspNetCore.Identity.SignInResult).GetProperty("Succeeded");
+            if (signInResultClass != null)
+                signInResultClass.SetValue(signInResult, true, null);
+        }
+        
+
+        _signInManagerMock.Setup(x => x.GetExternalAuthenticationSchemesAsync()).Returns(Task.FromResult(new List<AuthenticationScheme>().AsEnumerable()));
+        _signInManagerMock.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(Task.FromResult(signInResult));
+
+        //Act
+        var result = await _loginModel.OnPostAsync("~/") as LocalRedirectResult;
+
+        // Assert
+        result.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(result, nameof(result));
+        result.Url.Should().Be("~/");
+
+
+    }
+
+    [Fact]
+    public async Task WhenEmailAndPasswordAreOKAndRequiresTwoFactor_RedirectUrlIsReturned()
+    {
+        // Arrange
+        _loginModel.Input = new FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account.LoginModel.InputModel();
+        _loginModel.Input.Email = "someone@email.com";
+        _loginModel.Input.Password = "Pas$123";
+
+        Microsoft.AspNetCore.Identity.SignInResult signInResult = new();
+        if (typeof(Microsoft.AspNetCore.Identity.SignInResult) != null && typeof(Microsoft.AspNetCore.Identity.SignInResult).GetProperty("Succeeded") != null)
+        {
+            var signInResultClass = typeof(Microsoft.AspNetCore.Identity.SignInResult).GetProperty("RequiresTwoFactor");
+            if (signInResultClass != null)
+                signInResultClass.SetValue(signInResult, true, null);
+        }
+
+
+        _signInManagerMock.Setup(x => x.GetExternalAuthenticationSchemesAsync()).Returns(Task.FromResult(new List<AuthenticationScheme>().AsEnumerable()));
+        _signInManagerMock.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(Task.FromResult(signInResult));
+
+        //Act
+        var result = await _loginModel.OnPostAsync("~/") as RedirectToPageResult;
+
+        // Assert
+        result.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(result, nameof(result));
+        result.PageName.Should().Be("./LoginWith2fa");
+    }
+
+    [Fact]
+    public async Task WhenEmailAndPasswordAreOKAndIsLockedOut_RedirectUrlIsReturned()
+    {
+        // Arrange
+        _loginModel.Input = new FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account.LoginModel.InputModel();
+        _loginModel.Input.Email = "someone@email.com";
+        _loginModel.Input.Password = "Pas$123";
+
+        Microsoft.AspNetCore.Identity.SignInResult signInResult = new();
+        if (typeof(Microsoft.AspNetCore.Identity.SignInResult) != null && typeof(Microsoft.AspNetCore.Identity.SignInResult).GetProperty("Succeeded") != null)
+        {
+            var signInResultClass = typeof(Microsoft.AspNetCore.Identity.SignInResult).GetProperty("IsLockedOut");
+            if (signInResultClass != null)
+                signInResultClass.SetValue(signInResult, true, null);
+        }
+
+
+        _signInManagerMock.Setup(x => x.GetExternalAuthenticationSchemesAsync()).Returns(Task.FromResult(new List<AuthenticationScheme>().AsEnumerable()));
+        _signInManagerMock.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(Task.FromResult(signInResult));
+
+        //Act
+        var result = await _loginModel.OnPostAsync("~/") as RedirectToPageResult;
+
+        // Assert
+        result.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(result, nameof(result));
+        result.PageName.Should().Be("./Lockout");
     }
 }
