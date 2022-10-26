@@ -10,6 +10,7 @@ using System.Text.Encodings.Web;
 using System.Text;
 using FamilyHub.IdentityServerHost.Persistence.Repository;
 using FamilyHub.IdentityServerHost.Models.Entities;
+using static FamilyHub.IdentityServerHost.Pages.Organisations.OrganisationViewEditModel;
 
 namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account;
 
@@ -30,6 +31,8 @@ public class ManageUsersModel : PageModel
 
     [BindProperty]
     public string Search { get; set; } = default!;
+
+    public string OrganisationCode { get; set; } = default!;
 
     public PaginatedList<DisplayApplicationUser> Users { get; set; } = new PaginatedList<DisplayApplicationUser>();
     public string ReturnUrl { get; set; } = default!;
@@ -107,6 +110,9 @@ public class ManageUsersModel : PageModel
             {
                 applicationUsers = applicationUsers.Where(x => x.Roles.Contains("DfEAdmin") == false).ToList();
                 applicationUsers = applicationUsers.Where(x => x.OrganisationId == currentUser.OrganisationId || string.IsNullOrEmpty(x.OrganisationId)).ToList();
+                var organisation = _organisationRepository.GetUserOrganisationIdByUserId(currentUser.Id);
+                if (!string.IsNullOrEmpty(organisation))
+                    OrganisationCode = organisation;
             }  
         }
 
