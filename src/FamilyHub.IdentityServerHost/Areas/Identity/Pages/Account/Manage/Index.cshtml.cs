@@ -83,7 +83,8 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account.Manage
             }
 
             await LoadAsync(user);
-            return Page();
+            return RedirectToPage("./ChangePassword");
+            //return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

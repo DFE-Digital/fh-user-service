@@ -3,6 +3,8 @@
 @{
 }
 
+<a asp-page="/Index" class="govuk-back-link">Back</a>
+
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <form method="post">
@@ -49,7 +51,7 @@
 
         
 
-            @if (@Model.Users != null && @Model.Users.Items.Any())
+            @if (@Model.Users != null)
             {
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
@@ -57,7 +59,21 @@
                             <th scope="col" class="govuk-table__header">Name</th>
                             <th scope="col" class="govuk-table__header">Email</th>
                             <th scope="col" class="govuk-table__header">Roles</th>
+                            <th scope="col" class="govuk-table__header">Organisation Name</th>
+                            <th scope="col" class="govuk-table__header">Local Authority</th>
                             <th scope="col" class="govuk-table__header">Actions</th>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header"><input class="govuk-input" id="SearchName" name="SearchName" value="@Model.SearchName" type="text" autocomplete="SearchName"></th>
+                            <th scope="col" class="govuk-table__header"><input class="govuk-input" id="SearchEmail" name="SearchEmail" value="@Model.SearchEmail" type="text" autocomplete="SearchEmail"></th>
+                            <th scope="col" class="govuk-table__header"><input class="govuk-input" id="SearchRoles" name="SearchRoles" value="@Model.SearchRoles" type="text" autocomplete="SearchRoles"></th>
+                            <th scope="col" class="govuk-table__header"><input class="govuk-input" id="SearchOrganisationName" name="SearchOrganisationName" value="@Model.SearchOrganisationName" type="text" autocomplete="SearchOrganisationName"></th>
+                            <th scope="col" class="govuk-table__header"><input class="govuk-input" id="SearchLocalAuthority" name="SearchLocalAuthority" value="@Model.SearchLocalAuthority" type="text" autocomplete="SearchLocalAuthority"></th>
+                            <th scope="col" class="govuk-table__header">
+                                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                                    Search
+                                </button>
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -67,6 +83,8 @@
                                 <th scope="row" class="govuk-table__header">@item.UserName</th>
                                 <td class="govuk-table__cell">@item.Email</td>
                                 <td class="govuk-table__cell">@item.Roles</td>
+                                <td class="govuk-table__cell">@item.OrganisationName</td>
+                                <td class="govuk-table__cell">@item.LocalAuthority</td>
                                 <td class="govuk-table__cell">
                                     <button asp-page-handler="ResetPassword" asp-route-id="@item.Email" class="govuk-button govuk-!-font-weight-bold govuk-body govuk-!-font-size-16" data-module="govuk-button">Reset Password</button>
                                     <button asp-page-handler="DeleteUser" asp-route-id="@item.Id" class="govuk-button govuk-button--warning" data-module="govuk-button">
