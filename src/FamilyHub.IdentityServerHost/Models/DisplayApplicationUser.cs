@@ -7,5 +7,7 @@ public class DisplayApplicationUser
     public string Email { get; set; } = default!;
     public string Roles { get; set; } = default!;
     public string? OrganisationId { get; set; } = default!;
+    public string OrganisationName { get; set; } = default!;
+    public string LocalAuthority { get; set; } = default!;
 
 }

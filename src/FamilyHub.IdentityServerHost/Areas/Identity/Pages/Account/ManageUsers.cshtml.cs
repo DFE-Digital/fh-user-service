@@ -11,6 +11,8 @@ using System.Text;
 using FamilyHub.IdentityServerHost.Persistence.Repository;
 using FamilyHub.IdentityServerHost.Models.Entities;
 using static FamilyHub.IdentityServerHost.Pages.Organisations.OrganisationViewEditModel;
+using FamilyHub.IdentityServerHost.Services;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 
 namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account;
 
@@ -20,7 +22,8 @@ public class ManageUsersModel : PageModel
     private readonly UserManager<ApplicationIdentityUser> _userManager;
     private readonly IEmailSender _emailSender;
     private readonly IOrganisationRepository _organisationRepository;
-    
+    private readonly IApiService _apiService;
+
 
     [BindProperty]
     public int PageNumber { get; set; } = 1;
@@ -31,18 +34,28 @@ public class ManageUsersModel : PageModel
 
     [BindProperty]
     public string Search { get; set; } = default!;
+    [BindProperty]
+    public string SearchName { get; set; } = default!;
+    [BindProperty]
+    public string SearchEmail { get; set; } = default!;
+    [BindProperty]
+    public string SearchRoles { get; set; } = default!;
+    [BindProperty]
+    public string SearchOrganisationName { get; set; } = default!;
+    [BindProperty]
+    public string SearchLocalAuthority { get; set; } = default!;
 
     public string OrganisationCode { get; set; } = default!;
 
     public PaginatedList<DisplayApplicationUser> Users { get; set; } = new PaginatedList<DisplayApplicationUser>();
     public string ReturnUrl { get; set; } = default!;
 
-    public ManageUsersModel(UserManager<ApplicationIdentityUser> userManager, IEmailSender emailSender, IOrganisationRepository organisationRepository)
+    public ManageUsersModel(UserManager<ApplicationIdentityUser> userManager, IEmailSender emailSender, IOrganisationRepository organisationRepository, IApiService apiService)
     {
         _userManager = userManager;       
         _emailSender = emailSender;
         _organisationRepository = organisationRepository;
-        
+        _apiService = apiService;
     }
 
     public async Task OnGet(string pageNumber)
@@ -79,6 +92,7 @@ public class ManageUsersModel : PageModel
         ReturnUrl ??= Url.Content("~/Identity/Account/ManageUsers");
         
         List<UserOrganisation> userOrganisations = _organisationRepository.GetUserOrganisations();
+        List<OpenReferralOrganisationDto> organisations = await _apiService.GetListOpenReferralOrganisations();
 
         var users = _userManager.Users.OrderBy(x => x.UserName).ToList();
         List<DisplayApplicationUser> applicationUsers = new();
@@ -86,17 +100,33 @@ public class ManageUsersModel : PageModel
         {
             var roles = await _userManager.GetRolesAsync(user);
             string? organisationId = null;
+            string? organisationName = null;
+            string? localAuthority = null;
             var userOrganisation = userOrganisations.FirstOrDefault(x => x.UserId == user.Id);
             if (userOrganisation != null)
+            {
                 organisationId = userOrganisation.OrganisationId;
-
+                var org = organisations.FirstOrDefault(x => x.Id == userOrganisation.OrganisationId);
+                if (org != null)
+                {
+                    organisationName = org.Name;
+                    var la = organisations.FirstOrDefault(x => x.OrganisationType.Name == "LA" && x.AdministractiveDistrictCode == org.AdministractiveDistrictCode);
+                    if (la != null)
+                    {
+                        localAuthority = la.Name;
+                    }
+                }  
+            }
+               
             applicationUsers.Add(new DisplayApplicationUser()
             {
                 Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
                 Roles = string.Join(", ", roles),
-                OrganisationId = organisationId
+                OrganisationId = organisationId,
+                OrganisationName = organisationName,
+                LocalAuthority = localAuthority
             });
         }
 
@@ -117,9 +147,44 @@ public class ManageUsersModel : PageModel
         }
 
         List<DisplayApplicationUser> pagelist;
-        if (!string.IsNullOrEmpty(Search))
+        if (!string.IsNullOrEmpty(Search) ||
+            !string.IsNullOrEmpty(SearchName) ||
+            !string.IsNullOrEmpty(SearchEmail) ||
+            !string.IsNullOrEmpty(SearchRoles) ||
+            !string.IsNullOrEmpty(SearchOrganisationName) ||
+            !string.IsNullOrEmpty(SearchLocalAuthority))
         {
-            var allPages = applicationUsers.Where(x => x.UserName.Contains(Search) || x.Email.Contains(Search) || x.Roles.Contains(Search));
+            IEnumerable<DisplayApplicationUser> allPages = applicationUsers;
+            if (!string.IsNullOrEmpty(Search))
+            {
+                allPages = allPages.Where(x => x.UserName.Contains(Search) || x.Email.Contains(Search) || x.Roles.Contains(Search) || x.OrganisationName.Contains(Search) || x.LocalAuthority.Contains(Search));
+            }
+
+            if (!string.IsNullOrEmpty(SearchName))
+            {
+                allPages = allPages.Where(x => x.UserName.Contains(SearchName));
+            }
+
+            if (!string.IsNullOrEmpty(SearchEmail))
+            {
+                allPages = allPages.Where(x => x.Email.Contains(SearchEmail));
+            }
+
+            if (!string.IsNullOrEmpty(SearchRoles))
+            {
+                allPages = allPages.Where(x => x.Roles.Contains(SearchRoles));
+            }
+
+            if (!string.IsNullOrEmpty(SearchOrganisationName))
+            {
+                allPages = allPages.Where(x => x.OrganisationName.Contains(SearchOrganisationName));
+            }
+
+            if (!string.IsNullOrEmpty(SearchLocalAuthority))
+            {
+                allPages = allPages.Where(x => x.LocalAuthority.Contains(SearchLocalAuthority));
+            }
+
             pagelist = allPages.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToList();
             TotalPages = (int)Math.Ceiling((double)allPages.Count() / (double)PageSize);
             Users = new PaginatedList<DisplayApplicationUser>(pagelist, allPages.Count(), PageNumber, PageSize);
