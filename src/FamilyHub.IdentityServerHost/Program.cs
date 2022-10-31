@@ -43,7 +43,7 @@ else if (builder.Configuration.GetValue<string>("UseDbType") == "SqlServerDataba
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 }
-else
+else if (builder.Configuration.GetValue<string>("UseDbType") == "Postgres")
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
