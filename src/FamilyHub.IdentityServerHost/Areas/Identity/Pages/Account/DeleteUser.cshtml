@@ -1,0 +1,36 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account.DeleteUserModel
+@{
+    ViewData["Title"] = "Delete Personal Data";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-warning-text__assistive">Warning</span>
+        Deleting this data will permanently remove your account, and this cannot be recovered.
+  </strong>
+</div>
+
+<div>
+    <form id="delete-user" method="post">
+        <input asp-for="@Model.UserId" name="UserId" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="govuk-form-group">
+            <label asp-for="Input.Password" class="govuk-label govuk-label--m">Please enter your password to confirm this action</label>
+            <input asp-for="Input.Password" class="govuk-input" autocomplete="current-password" aria-required="true" />
+            
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+
+        <button class="govuk-button govuk-button--warning" data-module="govuk-button" type="submit">Delete data and close this users account (@Model.Username)</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

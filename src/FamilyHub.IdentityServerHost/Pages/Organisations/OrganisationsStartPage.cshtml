@@ -1,0 +1,26 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Pages.Organisations.OrganisationsStartPageModel
+@{
+}
+
+<a asp-page="/Index" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <h1 class="govuk-heading-xl">Organisations</h1>
+    <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--l" style="border-style: none;">
+    <div class="cards">
+        <div class="card" style="border-style: none;">
+            @*<h2 class="govuk-heading-m"><a asp-page="/Organisations/OrganisationViewEdit" asp-route-id="">Add a organisation</a></h2>*@
+            <h2 class="govuk-heading-m"><a asp-page="/Organisations/OrganisationsWhichType" asp-route-id="">Add a organisation</a></h2>
+            <p class="govuk-body-s">Add an organisation.</p>
+        </div>
+        <div class="card" style="border-style: none;">
+            <h2 class="govuk-heading-m"><a asp-page="/Organisations/ViewOrganisationList">Manage your organisations</a></h2>
+            <p class="govuk-body-s">View, change an organisation.</p>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
