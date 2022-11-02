@@ -1,0 +1,187 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    /* Create two equal columns that floats next to each other */
+    .column1 {
+        float: left;
+        width: 50%;
+        padding: 10px;
+    }
+
+    .column2 {
+        float: left;
+        width: 50%;
+        padding: 10px;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+</style>
+
+<a href="@Model.ReturnUrl" class="govuk-back-link">Back</a>
+
+<h1>@ViewData["Title"]</h1>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <div class="column1">
+                <input asp-for="@Model.Organisations" type="hidden">
+                <h2>Create a new account.</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @if(Model.UserOrganisations != null && Model.UserOrganisations.Any())
+                {
+                    <label class="govuk-label">User Organisations:</label>
+                    <div class="govuk-form-group">
+                        @foreach(var org in Model.UserOrganisations)
+                        {
+                            @org.Name
+                        }
+                    </div>
+                }
+
+                <div class="govuk-form-group">
+                    <label asp-for="Input.Email" class="govuk-label"></label>
+                    <input asp-for="Input.Email" class="govuk-input govuk-!-width-one-half" autocomplete="username" aria-required="true" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="govuk-form-group">
+                    <label asp-for="Input.Password" class="govuk-label"></label>
+                    <input asp-for="Input.Password" class="govuk-input govuk-!-width-one-half" autocomplete="new-password" aria-required="true" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="govuk-form-group">
+                    <label asp-for="Input.ConfirmPassword" class="govuk-label"></label>
+                    <input asp-for="Input.ConfirmPassword" class="govuk-input govuk-!-width-one-half" autocomplete="new-password" aria-required="true" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button id="registerSubmit" type="submit" class="govuk-button">Register</button>
+        </div>
+        <div class="column2">
+            <section>
+                <h3>Available Roles.</h3>
+                <hr />
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                Select Role?
+                            </h1>
+                        </legend>
+                        <div class="govuk-radios" data-module="govuk-radios">
+
+                            @foreach (var item in @Model.AvailableRoles)
+                            {
+                                <div class="govuk-radios__item">
+                                    <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@item.Name" />
+                                    <label class="govuk-label govuk-radios__label">
+                                        @item.Name
+                                    </label>
+                                    <span asp-validation-for="RoleSelection" class="text-danger"></span>
+                                </div>
+                            }
+                        </div>
+
+                    </fieldset>
+                </div>
+
+                @*<div class="govuk-form-group">
+                    <div id="type-hint" class="govuk-hint">
+                        Select all that apply.
+                    </div>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        @foreach (var item in @Model.AvailableRoles)
+                        {
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="@item.Name" name="RoleSelection" type="checkbox" value="@item.Id" @(Model.RoleSelection != null && Model.RoleSelection.Any(x=>x==item.Id) ? "checked" : "")> <!--aria-controls="baby-classes-conditional"!-->
+                                <label class="govuk-label govuk-checkboxes__label" for="@item.Name">
+                                    @item.Name
+                                </label>
+                                <span asp-validation-for="RoleSelection" class="text-danger"></span>
+                            </div>
+
+                        }
+                    </div>
+                </div>*@
+            </section>
+        </div>
+        </form>
+    </div>
+</main>
+
+@*<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.Email"></label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.Password"></label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.ConfirmPassword"></label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </form>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h3>Use another service to register.</h3>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
+                            about setting up this ASP.NET application to support logging in via external services</a>.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @if (Model.ExternalLogins != null)
+                                {
+                                    @foreach (var provider in Model.ExternalLogins)
+                                    {
+                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    }
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>*@
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
