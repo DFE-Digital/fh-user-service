@@ -15,7 +15,3 @@ COPY --from=build-env /app/out .
 EXPOSE 80
 EXPOSE 443
 ENTRYPOINT ["dotnet", "FamilyHub.IdentityServerHost.dll"]
-
-# Export image to tar 
-WORKDIR /app/out
-CMD $ docker save --output $(pipeline.workspace)/userserivce.image.tar $(imagename):$(build.buildid)
