@@ -1,5 +1,7 @@
 ﻿using FamilyHub.IdentityServerHost.Models.Configuration;
+using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Models.Links;
+using Microsoft.AspNetCore.Identity;
 
 namespace FamilyHub.IdentityServerHost.Models;
 
@@ -17,10 +19,12 @@ public class HeaderViewModel : IHeaderViewModel
     private readonly ILinkCollection _linkCollection;
     private readonly ILinkHelper _linkHelper;
     private readonly IUrlHelper _urlHelper;
+    
 
     public HeaderViewModel(
         IHeaderConfiguration configuration,
         IUserContext userContext,
+        string userName,
         ILinkCollection? linkCollection = null,
         ILinkHelper? linkHelper = null,
         IUrlHelper? urlHelper = null,
@@ -45,10 +49,11 @@ public class HeaderViewModel : IHeaderViewModel
         
         if (userContext != null && userContext.User != null && userContext.User.Identity != null)
         {
+            
             if (userContext.User.Identity.IsAuthenticated)
             {
                 AddOrUpdateLink(new HomeLink("/Index", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-                AddOrUpdateLink(new SignOutLink("/Identity/Account/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+                AddOrUpdateLink(new SignOutLink(userName, "/Identity/Account/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
             }
             else
             {

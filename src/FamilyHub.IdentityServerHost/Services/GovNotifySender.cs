@@ -31,7 +31,9 @@ public class GovNotifySender : IEmailSender
         await client.SendEmailAsync(
                 emailAddress: email,
                 templateId: _govNotifySettings.Value.TemplateId,
-                personalisation: personalisation
+                personalisation: personalisation,
+                clientReference: null,
+                emailReplyToId: null
         );
     }
 }
