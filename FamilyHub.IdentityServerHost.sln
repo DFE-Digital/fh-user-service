@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHub.IdentityServerHos
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5872F004-6F24-45B0-ABD2-F2A84F03E73A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHub.IdentityServerHost.UI.UnitTests", "tests\FamilyHub.IdentityServerHost.UI.UnitTests\FamilyHub.IdentityServerHost.UI.UnitTests.csproj", "{8D0C789D-56BA-4D74-A2B6-A295F349A435}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHub.IdentityServerHost.UI.UnitTests", "tests\FamilyHub.IdentityServerHost.UI.UnitTests\FamilyHub.IdentityServerHost.UI.UnitTests.csproj", "{8D0C789D-56BA-4D74-A2B6-A295F349A435}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

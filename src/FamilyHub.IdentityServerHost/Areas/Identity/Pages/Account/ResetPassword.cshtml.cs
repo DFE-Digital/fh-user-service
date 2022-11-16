@@ -80,6 +80,10 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
             }
             else
             {
+                int index = code.LastIndexOf("'");
+                if (index >= 0)
+                    code = code.Substring(0, index);
+
                 Input = new InputModel
                 {
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
