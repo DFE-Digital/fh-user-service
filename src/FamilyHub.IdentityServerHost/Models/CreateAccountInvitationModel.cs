@@ -13,20 +13,22 @@ public class CreateAccountInvitationModel
     {
 
     }
-    public CreateAccountInvitationModel(string organisationId, string role, DateTime dateExpired)
+    public CreateAccountInvitationModel(string emailAddress, string organisationId, string role, DateTime dateExpired)
     {
+        EmailAddress = emailAddress;
         OrganisationId = organisationId;
         Role = role;
         DateExpired = dateExpired;
     }
 
+    public string EmailAddress { get; init; } = default!;
     public string OrganisationId { get; init; } = default!;
     public string Role { get; init; } = default!;
     public DateTime DateExpired { get; init; }
 
-    public static string GetTokenString(string key, string organisationId, string role, DateTime dateExpired)
+    public static string GetTokenString(string key, string emailAddress, string organisationId, string role, DateTime dateExpired)
     {
-        CreateAccountInvitationModel createAccountInvitationModel = new CreateAccountInvitationModel(organisationId, role, dateExpired);
+        CreateAccountInvitationModel createAccountInvitationModel = new CreateAccountInvitationModel(emailAddress, organisationId, role, dateExpired);
         var content = Newtonsoft.Json.JsonConvert.SerializeObject(createAccountInvitationModel);
         return Crypt.Encrypt(content, key); 
     }

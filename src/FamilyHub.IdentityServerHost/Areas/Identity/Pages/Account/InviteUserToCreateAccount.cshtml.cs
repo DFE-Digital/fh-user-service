@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Configuration;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using static FamilyHub.IdentityServerHost.Pages.Organisations.OrganisationViewEditModel;
 
 namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account;
 
@@ -27,6 +29,8 @@ public class InviteUserToCreateAccountModel : PageModel
     public List<IdentityRole> AvailableRoles { get; set; } = new List<IdentityRole>(); // default(List<IdentityRole>);
 
     [BindProperty]
+    [Required]
+    [EmailAddress]
     public string Email { get; set; } = default!;
 
     [BindProperty]
@@ -106,6 +110,11 @@ public class InviteUserToCreateAccountModel : PageModel
             OrganisationCode.Add("Select organisation");
             OrganisationNumber = OrganisationCode.Count;
         }
+
+        if (User.IsInRole("DfEAdmin"))
+        {
+            OrganisationSelectionList.Insert(0, new SelectListItem() { Text = "No Organisation" });
+        }
     }
 
     public async Task OnPostAddAnotherOrganisation()
@@ -162,12 +171,18 @@ public class InviteUserToCreateAccountModel : PageModel
                 }
             }
         }
+
+        if (OrganisationCode.Contains("No Organisation"))
+        {
+            OrganisationCode.Remove("No Organisation");
+        }
+        
         var selected = string.Join(',', OrganisationCode ?? new List<string>());
 
-        var code = CreateAccountInvitationModel.GetTokenString(_configuration.GetValue<string>("InvitationKey"), selected, RoleSelection, DateTime.UtcNow.AddDays(1));
+        var code = CreateAccountInvitationModel.GetTokenString(_configuration.GetValue<string>("InvitationKey"), Email, selected, RoleSelection, DateTime.UtcNow.AddDays(1));
 
         var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
+                    "/Account/RegisterUserFromInvitation",
                     pageHandler: null,
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
