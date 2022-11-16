@@ -24,7 +24,8 @@
                     @if(User.IsInRole("DfEAdmin"))
                     {
                         <p>
-                            <a asp-page="./WhichOrganisations" asp-route-returnUrl="@Model.ReturnUrl">Register a new user</a>
+                            <a asp-page="./InviteUserToCreateAccount" asp-route-returnUrl="@Model.ReturnUrl">Invite a new user</a>
+                            @*<a asp-page="./WhichOrganisations" asp-route-returnUrl="@Model.ReturnUrl">Register a new user</a>*@
                         </p>
                         <p>
                             <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register a new user with no organisation</a>
