@@ -137,7 +137,7 @@ public class ApplicationDbContextInitialiser
         string[] Pro = new string[] { "BtlPro", "LanPro", "LbrPro", "SalPro", "SufPro", "TowPro" };
         string[] Websites = new string[] { "https://www.bristol.gov.uk/", "https://www.lancashire.gov.uk/", "https://www.redbridge.gov.uk/", "https://www.salford.gov.uk/", "https://www.suffolk.gov.uk/", "https://www.towerhamlets.gov.uk/Home.aspx" };
 
-        await AddUser(_userManager, "martin.belton@digital.education.gov.uk", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
+        //await AddUser(_userManager, "martin.belton@digital.education.gov.uk", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
         await AddUser(_userManager, "DfEAdmin", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
         for (int i = 0; i < LAAdmins.Length; i++)
         {

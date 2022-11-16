@@ -92,10 +92,13 @@ public class InviteUserToCreateAccountModel : PageModel
 
     private async Task InitPage()
     {
+
         if (User.IsInRole("DfEAdmin"))
             AvailableRoles = _roleManager.Roles.OrderBy(x => x.Name).ToList();
-        else
+        else if (User.IsInRole("LAAdmin"))
             AvailableRoles = _roleManager.Roles.Where(x => x.Name != "DfEAdmin").OrderBy(x => x.Name).ToList();
+        else if (User.IsInRole("VCSAdmin"))
+            AvailableRoles = _roleManager.Roles.Where(x => x.Name != "DfEAdmin" && x.Name != "LAAdmin").OrderBy(x => x.Name).ToList();
 
         var list = await _apiService.GetListOpenReferralOrganisations();
         OrganisationSelectionList = list.OrderBy(x => x.Name).Select(c => new SelectListItem() { Text = c.Name, Value = c.Id }).ToList();

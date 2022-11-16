@@ -2,6 +2,8 @@
 using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Text;
 using System.Text.Json;
 
@@ -33,9 +35,21 @@ public class CreateAccountInvitationModel
         return Crypt.Encrypt(content, key); 
     }
 
-    public static CreateAccountInvitationModel GetCreateAccountInvitationModel(string key, string tokenstring)
+    public static CreateAccountInvitationModel? GetCreateAccountInvitationModel(string key, string tokenstring)
     {
         string json = Crypt.Decrypt(tokenstring, key);
-        return  JsonSerializer.Deserialize<CreateAccountInvitationModel>(tokenstring) ?? new CreateAccountInvitationModel();
+        json = json.Remove(json.Length - 3, 1);
+
+        var microsoftDateFormatSettings = new JsonSerializerSettings
+        {
+            DateFormatHandling = DateFormatHandling.MicrosoftDateFormat,
+            DateTimeZoneHandling = DateTimeZoneHandling.Local
+        };
+
+        CreateAccountInvitationModel? model = JsonConvert.DeserializeObject<CreateAccountInvitationModel>(json,
+            microsoftDateFormatSettings);
+            //new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ" });
+
+        return model;        
     }
 }

@@ -5,15 +5,19 @@
 
 <a asp-page="./ManageUsers" class="govuk-back-link">Back</a>
 
+
+
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <div data-module="moj-add-another">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                    <h1 class="govuk-fieldset__heading">
-                        Invite User to Create an Account
-                    </h1>
-                </legend>
+               <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <label class="govuk-fieldset__heading">
+                            Invite User to Create an Account
+                        </label>
+                    </legend>
+                </fieldset>
                 <hr />
                 <form method="post">
                     <section>
@@ -109,4 +113,9 @@
         </div>
     </div>
 </main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
 

@@ -1,5 +1,6 @@
 using FamilyHub.IdentityServerHost.Models;
 using FamilyHub.IdentityServerHost.Models.Entities;
+using FamilyHub.IdentityServerHost.Persistence.Data.AddOrganisation;
 using FamilyHub.IdentityServerHost.Persistence.Repository;
 using FamilyHub.IdentityServerHost.Services;
 using IdentityModel;
@@ -110,7 +111,7 @@ public class RegisterUserFromInvitationModel : PageModel
 
             var invitationModel = CreateAccountInvitationModel.GetCreateAccountInvitationModel(_configuration.GetValue<string>("InvitationKey"), code);
 
-            if (invitationModel.DateExpired > DateTime.UtcNow)
+            if (invitationModel == null || DateTime.UtcNow > invitationModel.DateExpired)
             {
                 return BadRequest("The code has expired.");
             }
@@ -129,6 +130,16 @@ public class RegisterUserFromInvitationModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        if (string.Compare(Input.Role, "DfEAdmin", StringComparison.OrdinalIgnoreCase) == 0)
+            ModelState.Remove("Input.OrganisationId");
+        else
+        {
+            if (Input.OrganisationId == null)
+                ModelState.AddModelError("", "You are not associated with an organisation.");
+        }
+
+        ModelState.Remove("Input.Role");
+
         if (ModelState.IsValid)
         {
             var user = CreateUser();
@@ -165,7 +176,7 @@ public class RegisterUserFromInvitationModel : PageModel
                 else
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect("./");
+                    return LocalRedirect("~/");
                 }
             }
             foreach (var error in result.Errors)
