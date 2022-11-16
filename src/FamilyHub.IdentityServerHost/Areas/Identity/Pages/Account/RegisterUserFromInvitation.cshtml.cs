@@ -110,6 +110,11 @@ public class RegisterUserFromInvitationModel : PageModel
 
             var invitationModel = CreateAccountInvitationModel.GetCreateAccountInvitationModel(_configuration.GetValue<string>("InvitationKey"), code);
 
+            if (invitationModel.DateExpired > DateTime.UtcNow)
+            {
+                return BadRequest("The code has expired.");
+            }
+
             Input.Email = invitationModel.EmailAddress;
             Input.OrganisationId = invitationModel.OrganisationId;
             Input.Role = invitationModel.Role;
