@@ -20,6 +20,8 @@ public class OrganisationsWhichTypeModel : PageModel
     [Required]
     [BindProperty(SupportsGet = true)]
     public string SelectedAuthority { get; set; } = default!;
+
+    public string SelectedAuthorityName { get; set; } = default!;
     public List<SelectListItem> AuthorityList { get; set; } = new List<SelectListItem>();
 
     [BindProperty]
@@ -32,9 +34,30 @@ public class OrganisationsWhichTypeModel : PageModel
     public async Task OnGet(string id)
     {
         OrganisationId = id;
+        await Init();
+    }
 
+    public async Task<IActionResult> OnPost()
+    {
+        ModelState.Remove("OrganisationId");
+            
+        if (!ModelState.IsValid)
+        {
+            await Init();
+            return Page();
+        }
+        return RedirectToPage("/Organisations/OrganisationViewEdit", new
+        {
+            id = OrganisationId,
+            organisationTypeId = SelectedOrganisationType,
+            authorityCode = SelectedAuthority
+        });
+    }
+
+    private async Task Init()
+    {
         var organisationTypes = await _apiService.GetListOrganisationTypes();
-        if(!User.IsInRole("DfEAdmin"))
+        if (!User.IsInRole("DfEAdmin") && OrganisationId == null)
         {
             organisationTypes = organisationTypes.Where(x => x.Name != "LA").ToList();
         }
@@ -73,32 +96,18 @@ public class OrganisationsWhichTypeModel : PageModel
             var authorityList = organisations.Select(x => new SelectListItem { Text = x.Name, Value = x.AdministractiveDistrictCode }).ToList();
             AuthorityList = authorityList.OrderBy(x => x.Text).ToList();
             SelectedAuthority = authorityList[0].Value;
+            SelectedAuthorityName = authorityList[0].Text;
             if (!string.IsNullOrEmpty(OrganisationId))
             {
                 var organisation = organisations.FirstOrDefault(x => x.Id == OrganisationId);
                 if (organisation != null)
                 {
                     SelectedAuthority = organisation.AdministractiveDistrictCode ?? authorityList[0].Value;
+                    SelectedAuthorityName = organisation.Name ?? authorityList[0].Value ?? authorityList[0].Text;
                 }
             }
         }
-            
-        ModelState.Clear();
-    }
 
-    public IActionResult OnPost()
-    {
-        ModelState.Remove("OrganisationId");
-            
-        if (!ModelState.IsValid)
-        {
-            return Page();
-        }
-        return RedirectToPage("/Organisations/OrganisationViewEdit", new
-        {
-            id = OrganisationId,
-            organisationTypeId = SelectedOrganisationType,
-            authorityCode = SelectedAuthority
-        });
+        ModelState.Clear();
     }
 }

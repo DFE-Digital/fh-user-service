@@ -39,6 +39,15 @@
                                     @foreach (var item in @Model.AvailableRoles)
                                     {
                                         <div class="govuk-radios__item">
+                                            @if(item.Name == "DfEAdmin")
+                                            {
+                                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@item.Name" />
+                                                
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@item.Name" data-aria-controls="localauthority" />
+                                            }
                                             <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@item.Name" />
                                             <label class="govuk-label govuk-radios__label">
                                                 @item.Name
@@ -80,17 +89,18 @@
                                         </p>
                                     }
                                 }
-
-                                <div class="govuk-form-group">
-                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                        <h1 class="govuk-fieldset__heading">
-                                            Select an organisation
-                                        </h1>
-                                    </legend>
-                                    @*<label for="OrganisationCode@(i)" class="govuk-label">Select an organisation</label>*@
-                                    @*<select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>*@
-                                    <select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>
-                                </div>
+                                @*<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="localauthority">*@
+                                    <div class="govuk-form-group">
+                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                            <h1 class="govuk-fieldset__heading">
+                                                Select an organisation
+                                            </h1>
+                                        </legend>
+                                        @*<label for="OrganisationCode@(i)" class="govuk-label">Select an organisation</label>*@
+                                        @*<select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>*@
+                                        <select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>
+                                    </div>
+                                @*</div>*@
 
                                 @if (@Model.OrganisationNumber > 1)
                                 {
