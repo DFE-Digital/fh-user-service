@@ -32,6 +32,8 @@ public class RegisterUserFromInvitationModel : PageModel
     private readonly IMemoryCache _memoryCache;
 
 
+    public bool LinkHasExpired = false;
+
     [BindProperty]
     public InputModel Input { get; set; } = new InputModel();
 
@@ -113,7 +115,8 @@ public class RegisterUserFromInvitationModel : PageModel
 
             if (invitationModel == null || DateTime.UtcNow > invitationModel.DateExpired)
             {
-                return BadRequest("The code has expired.");
+                LinkHasExpired = true;
+                return Page();
             }
 
             Input.Email = invitationModel.EmailAddress;
@@ -165,9 +168,6 @@ public class RegisterUserFromInvitationModel : PageModel
                     protocol: Request.Scheme);
 
                 ArgumentNullException.ThrowIfNull(callbackUrl, nameof(callbackUrl));
-
-                await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
                 {

@@ -5,6 +5,12 @@
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
     <div class="govuk-grid-row">
+        @if(Model.LinkHasExpired == true)
+        {
+            <p>The Link that you have clicked on has expired. Please ask the administrator to resend a new invitation.</p>
+        }
+        else
+        {
         <form id="registerForm" method="post">
             <div class="column1">
                 <input asp-for="@Model.Input.OrganisationId" type="hidden">
@@ -30,6 +36,7 @@
                 <button id="registerSubmit" type="submit" class="govuk-button">Register</button>
             </div>
         </form>
+        }
     </div>
 </main>
 
