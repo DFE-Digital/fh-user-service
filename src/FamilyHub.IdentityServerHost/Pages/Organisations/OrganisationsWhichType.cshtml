@@ -22,7 +22,15 @@
             <label class="govuk-label" for="SelectedAuthority">
                 Local Authority
             </label>
-            <select class="govuk-select" id="SelectedAuthority" name="SelectedAuthority" asp-for="SelectedAuthority" asp-items="Model.AuthorityList"></select>
+            @if(!User.IsInRole("DfEAdmin") && Model.OrganisationId != null)
+            {
+                <input asp-for="@Model.SelectedAuthority" name="SelectedAuthority" type="hidden" />
+                <input asp-for="SelectedAuthorityName" class="govuk-input govuk-!-width-one-half" readonly aria-required="true" />
+            }
+            else
+            {
+                <select class="govuk-select" id="SelectedAuthority" name="SelectedAuthority" asp-for="SelectedAuthority" asp-items="Model.AuthorityList"></select>
+            }
             <span asp-validation-for="SelectedAuthority" class="text-danger"></span>
         </div>
         <div class="moj-button-action">
