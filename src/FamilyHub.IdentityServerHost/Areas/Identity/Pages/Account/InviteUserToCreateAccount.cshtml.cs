@@ -83,15 +83,7 @@ public class InviteUserToCreateAccountModel : PageModel
 
     private async Task InitPage()
     {
-        //if (!User.IsInRole("DfEAdmin"))
-        //{
-        //    var userEmail = User.FindFirstValue(ClaimTypes.Email);
-        //    var user = await _userManager.FindByEmailAsync(userEmail);
-        //    var organisation = _organisationRepository.GetUserOrganisationIdByUserId(user.Id);
-        //    if (!string.IsNullOrEmpty(organisation))
-        //        OrganisationCode.Add(organisation);
-        //}
-
+        
         if (User.IsInRole("DfEAdmin"))
             AvailableRoles = _roleManager.Roles.OrderBy(x => x.Name).ToList();
         else if (User.IsInRole("LAAdmin"))
