@@ -105,7 +105,7 @@ public class ApplicationDbContextInitialiser
         if (!_roleManager.Roles.Any())
         {
             _logger.LogDebug("Roles being populated");
-            string[] roles = new string[] { "DfEAdmin", "LAAdmin", "VCSAdmin", "Pro" };
+            string[] roles = new string[] { "DfEAdmin", "LAAdmin", "VCSAdmin", "Professional" };
             foreach (var role in roles)
             {
                 IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(role));
@@ -149,7 +149,7 @@ public class ApplicationDbContextInitialiser
         }
         for (int i = 0; i < Pro.Length; i++)
         {
-            await AddUser(_userManager, Pro[i], "Pass123$", "Pro", Websites[i]);
+            await AddUser(_userManager, Pro[i], "Pass123$", "Professional", Websites[i]);
         }
     }
 

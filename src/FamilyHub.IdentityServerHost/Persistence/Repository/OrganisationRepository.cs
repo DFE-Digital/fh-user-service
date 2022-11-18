@@ -7,6 +7,7 @@ public interface IOrganisationRepository
 {
     Task AddUserOrganisationAsync(UserOrganisation userOrganisation, CancellationToken cancellationToken = new CancellationToken());
     string GetUserOrganisationIdByUserId(string userId);
+    List<string> GetAllUserOrganisationsByUserId(string userId);
     List<UserOrganisation> GetUserOrganisations();
     Task DeleteUserByUserIdAsync(string userId, CancellationToken cancellationToken = new CancellationToken());
 }
@@ -44,6 +45,11 @@ public class OrganisationRepository : IOrganisationRepository
         }
 
         return string.Empty;
+    }
+
+    public List<string> GetAllUserOrganisationsByUserId(string userId)
+    {
+        return _applicationDbContext.UserOrganisations.Where(x => x.UserId == userId).Select(x => x.OrganisationId).ToList();
     }
 
     public List<UserOrganisation> GetUserOrganisations()

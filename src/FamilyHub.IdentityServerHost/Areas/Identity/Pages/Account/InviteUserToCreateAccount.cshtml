@@ -89,17 +89,17 @@
                                         </p>
                                     }
                                 }
+
+                                
                                 @*<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="localauthority">*@
-                                    <div class="govuk-form-group">
-                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                            <h1 class="govuk-fieldset__heading">
-                                                Select an organisation
-                                            </h1>
-                                        </legend>
-                                        @*<label for="OrganisationCode@(i)" class="govuk-label">Select an organisation</label>*@
-                                        @*<select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>*@
-                                        <select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>
-                                    </div>
+                                <div class="govuk-form-group">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                        <h1 class="govuk-fieldset__heading">
+                                            Select an organisation
+                                        </h1>
+                                    </legend>
+                                    <select class="govuk-select" id="OrganisationCode@(i)" name="OrganisationCode" asp-for="@Model.OrganisationCode[i]" asp-items="@Model.OrganisationSelectionList"></select>
+                                </div>
                                 @*</div>*@
 
                                 @if (@Model.OrganisationNumber > 1)

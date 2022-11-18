@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using NuGet.Configuration;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using static FamilyHub.IdentityServerHost.Pages.Organisations.OrganisationViewEditModel;
 
 namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account;
 
@@ -80,18 +78,19 @@ public class InviteUserToCreateAccountModel : PageModel
     {
         ReturnUrl = returnUrl;
         await InitPage();
-        if (!User.IsInRole("DfEAdmin"))
-        {
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            var user = await _userManager.FindByEmailAsync(userEmail);
-            var organisation = _organisationRepository.GetUserOrganisationIdByUserId(user.Id);
-            if (!string.IsNullOrEmpty(organisation))
-                OrganisationCode.Add(organisation);
-        }
+        
     }
 
     private async Task InitPage()
     {
+        //if (!User.IsInRole("DfEAdmin"))
+        //{
+        //    var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        //    var user = await _userManager.FindByEmailAsync(userEmail);
+        //    var organisation = _organisationRepository.GetUserOrganisationIdByUserId(user.Id);
+        //    if (!string.IsNullOrEmpty(organisation))
+        //        OrganisationCode.Add(organisation);
+        //}
 
         if (User.IsInRole("DfEAdmin"))
             AvailableRoles = _roleManager.Roles.OrderBy(x => x.Name).ToList();
@@ -101,8 +100,29 @@ public class InviteUserToCreateAccountModel : PageModel
             AvailableRoles = _roleManager.Roles.Where(x => x.Name != "DfEAdmin" && x.Name != "LAAdmin").OrderBy(x => x.Name).ToList();
 
         var list = await _apiService.GetListOpenReferralOrganisations();
-        OrganisationSelectionList = list.OrderBy(x => x.Name).Select(c => new SelectListItem() { Text = c.Name, Value = c.Id }).ToList();
-
+        if (User.IsInRole("VCSAdmin"))
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userManager.FindByEmailAsync(userEmail);
+            var orgaisationIds = _organisationRepository.GetAllUserOrganisationsByUserId(user.Id);
+            OrganisationSelectionList = list.Where(x => orgaisationIds.Contains(x.Id)).OrderBy(x => x.Name).Select(c => new SelectListItem() { Text = c.Name, Value = c.Id }).ToList();
+        }
+        else if (User.IsInRole("LAAdmin"))
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userManager.FindByEmailAsync(userEmail);
+            var organisationId = _organisationRepository.GetUserOrganisationIdByUserId(user.Id);
+            var organisation = list.FirstOrDefault(x => x.Id == organisationId);
+            if (organisation != null)
+            {
+                OrganisationSelectionList = list.Where(x => x.AdministractiveDistrictCode == organisation.AdministractiveDistrictCode).OrderBy(x => x.Name).Select(c => new SelectListItem() { Text = c.Name, Value = c.Id }).ToList();
+            }
+        }
+        else
+        {
+            OrganisationSelectionList = list.OrderBy(x => x.Name).Select(c => new SelectListItem() { Text = c.Name, Value = c.Id }).ToList();
+        }
+        
         if (Organisations != null)
         {
             OrganisationCode = Organisations;
