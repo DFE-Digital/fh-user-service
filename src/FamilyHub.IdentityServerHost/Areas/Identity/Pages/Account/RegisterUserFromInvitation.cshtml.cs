@@ -1,6 +1,5 @@
 using FamilyHub.IdentityServerHost.Models;
 using FamilyHub.IdentityServerHost.Models.Entities;
-using FamilyHub.IdentityServerHost.Persistence.Data.AddOrganisation;
 using FamilyHub.IdentityServerHost.Persistence.Repository;
 using FamilyHub.IdentityServerHost.Services;
 using IdentityModel;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Caching.Memory;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Encodings.Web;
 
 namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account;
 
