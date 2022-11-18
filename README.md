@@ -39,7 +39,7 @@ With the body:
   "password": "your password"
 }
 
-##Migrations Commands
+## Migrations Commands
 
 First of all add this package if it does not already exist.
 dotnet add package Microsoft.EntityFrameworkCore.Design
@@ -47,8 +47,6 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 To add migrations from scratch:
 
 dotnet ef migrations add CreateIdentitySchema -c ApplicationDbContext --output-dir Persistence\Data\CreateIdentitySchema
-dotnet ef migrations add Organisations -c ApplicationDbContext --output-dir Persistence\Data\AddOrganisation
-dotnet ef migrations add ModifyUser -c ApplicationDbContext --output-dir Persistence\Data\ModifyUser
 
 After you have added any migrations update the database with:
 
