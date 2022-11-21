@@ -1,9 +1,12 @@
 ﻿using FamilyHub.IdentityServerHost.Models;
 using FamilyHub.IdentityServerHost.Models.Configuration;
+using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHubs.ServiceDirectoryAdminUi.Ui.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 
 
 namespace FamilyHub.IdentityServerHost.Extensions;
@@ -18,6 +21,13 @@ public static class HtmlHelperExtensions
         var requestPath = html.ViewContext.HttpContext.Request.Path;
         var hashedAccountId = html.ViewContext.RouteData.Values["accountId"]?.ToString();
 
+        string userName = string.Empty;
+        UserManager<ApplicationIdentityUser>? userManager = html.ViewContext.HttpContext.RequestServices.GetService(typeof(UserManager<ApplicationIdentityUser>)) as UserManager<ApplicationIdentityUser>;
+        if (userManager != null)
+        {
+            userName = userManager.GetUserName(html.ViewContext.HttpContext.User);
+        }
+
         var headerModel = new HeaderViewModel(new HeaderConfiguration
         {
             AuthenticationAuthorityUrl = authConfig?.BaseAddress ?? string.Empty,
@@ -30,7 +40,9 @@ public static class HtmlHelperExtensions
         {
             User = html.ViewContext.HttpContext.User,
             HashedAccountId = html.ViewContext.RouteData.Values["accountId"]?.ToString() ?? string.Empty,
-        });
+        },
+        userName
+        );
 
         headerModel.SelectMenu("Finance");
 

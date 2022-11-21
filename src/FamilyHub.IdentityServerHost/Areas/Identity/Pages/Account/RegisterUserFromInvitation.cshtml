@@ -1,0 +1,45 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account.RegisterUserFromInvitationModel
+@{
+}
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <div class="govuk-grid-row">
+        @if(Model.LinkHasExpired == true)
+        {
+            <p>The Link that you have clicked on has expired. Please ask the administrator to resend a new invitation.</p>
+        }
+        else
+        {
+        <form id="registerForm" method="post">
+            <div class="column1">
+                <input asp-for="@Model.Input.OrganisationId" type="hidden">
+                <input asp-for="@Model.Input.Role" type="hidden">
+                <h2>Create a new account.</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="govuk-form-group">
+                    <label asp-for="Input.Email" class="govuk-label"></label>
+                    <input asp-for="Input.Email" class="govuk-input govuk-!-width-one-half" autocomplete="username" aria-required="true" readonly />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="govuk-form-group">
+                    <label asp-for="Input.Password" class="govuk-label"></label>
+                    <input asp-for="Input.Password" class="govuk-input govuk-!-width-one-half" autocomplete="new-password" aria-required="true" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="govuk-form-group">
+                    <label asp-for="Input.ConfirmPassword" class="govuk-label"></label>
+                    <input asp-for="Input.ConfirmPassword" class="govuk-input govuk-!-width-one-half" autocomplete="new-password" aria-required="true" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button id="registerSubmit" type="submit" class="govuk-button">Register</button>
+            </div>
+        </form>
+        }
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

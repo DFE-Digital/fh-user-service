@@ -4,6 +4,7 @@ using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.AzureAppServices;
 using System.Configuration;
 
@@ -24,34 +25,36 @@ builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics())
 
 builder.Services.Configure<GovNotifySetting>(builder.Configuration.GetSection("GovNotifySetting"));
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("UserServiceConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 
-if (builder.Configuration.GetValue<string>("UseDbType") == "UseInMemoryDatabase")
+string useDbType = builder.Configuration.GetValue<string>("UseDbType");
+
+switch (useDbType)
 {
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    default:
+    case "UseInMemoryDatabase":
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseInMemoryDatabase("FH-IdentityDb"));
-}
-else if (builder.Configuration.GetValue<string>("UseDbType") == "SqlLite")
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
+        break;
+
+    case "UseSqlLite":
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite(builder.Configuration.GetConnectionString("UserServiceConnection"),
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
-}
-else if (builder.Configuration.GetValue<string>("UseDbType") == "SqlServerDatabase")
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        break;
+    case "UseSqlServerDatabase":
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("UserServiceConnection"),
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
-}
-else if (builder.Configuration.GetValue<string>("UseDbType") == "Postgres")
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
+        break;
+    case "UsePostgresDatabase":
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("UserServiceConnection"),
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+        break;
+
 }
 
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<ApplicationIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()

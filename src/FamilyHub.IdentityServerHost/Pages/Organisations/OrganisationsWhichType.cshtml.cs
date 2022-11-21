@@ -20,6 +20,8 @@ public class OrganisationsWhichTypeModel : PageModel
     [Required]
     [BindProperty(SupportsGet = true)]
     public string SelectedAuthority { get; set; } = default!;
+
+    public string SelectedAuthorityName { get; set; } = default!;
     public List<SelectListItem> AuthorityList { get; set; } = new List<SelectListItem>();
 
     [BindProperty]
@@ -32,40 +34,16 @@ public class OrganisationsWhichTypeModel : PageModel
     public async Task OnGet(string id)
     {
         OrganisationId = id;
-
-        var organisationTypes = await _apiService.GetListOrganisationTypes();
-        if (organisationTypes != null)
-        {
-            OrganisationTypeList = organisationTypes.Select(x => new SelectListItem { Text = x.Description, Value = x.Id }).ToList();
-            SelectedOrganisationType = OrganisationTypeList[0].Value;
-        }
-
-        var authorityList = StaticData.AuthorityCache.Select(x => new SelectListItem { Text = x.Value, Value = x.Key }).ToList();
-        AuthorityList = authorityList.OrderBy(x => x.Text).ToList();
-        SelectedAuthority = authorityList[0].Value;
-
-        if (!string.IsNullOrEmpty(OrganisationId))
-        {
-            OpenReferralOrganisationDto organisation = await _apiService.GetOpenReferralOrganisationById(OrganisationId);
-            if (organisation != null)
-            {
-                SelectedOrganisationType = organisation.OrganisationType.Id;
-            }
-
-            var authorityCode = await _apiService.GetAdminCodeByOrganisationId(OrganisationId);
-            if (!string.IsNullOrEmpty(authorityCode))
-                SelectedAuthority = authorityCode;
-        }
-
-        ModelState.Clear();
+        await Init();
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPost()
     {
         ModelState.Remove("OrganisationId");
-
+            
         if (!ModelState.IsValid)
         {
+            await Init();
             return Page();
         }
         return RedirectToPage("/Organisations/OrganisationViewEdit", new
@@ -74,5 +52,62 @@ public class OrganisationsWhichTypeModel : PageModel
             organisationTypeId = SelectedOrganisationType,
             authorityCode = SelectedAuthority
         });
+    }
+
+    private async Task Init()
+    {
+        var organisationTypes = await _apiService.GetListOrganisationTypes();
+        if (!User.IsInRole("DfEAdmin") && OrganisationId == null)
+        {
+            organisationTypes = organisationTypes.Where(x => x.Name != "LA").ToList();
+        }
+        if (organisationTypes != null)
+        {
+            OrganisationTypeList = organisationTypes.Select(x => new SelectListItem { Text = x.Description, Value = x.Id }).ToList();
+            SelectedOrganisationType = OrganisationTypeList[0].Value;
+        }
+
+
+        var organisations = await _apiService.GetListOpenReferralOrganisations();
+
+
+        if (User.IsInRole("DfEAdmin"))
+        {
+            var authorityList = StaticData.AuthorityCache.Select(x => new SelectListItem { Text = x.Value, Value = x.Key }).ToList();
+            AuthorityList = authorityList.OrderBy(x => x.Text).ToList();
+            SelectedAuthority = authorityList[0].Value;
+
+            if (!string.IsNullOrEmpty(OrganisationId))
+            {
+                OpenReferralOrganisationDto? organisation = organisations.FirstOrDefault(x => x.Id == OrganisationId);  //await _apiService.GetOpenReferralOrganisationById(OrganisationId);
+                if (organisation != null)
+                {
+                    SelectedOrganisationType = organisation.OrganisationType.Id;
+                }
+
+                var authorityCode = await _apiService.GetAdminCodeByOrganisationId(OrganisationId);
+                if (!string.IsNullOrEmpty(authorityCode))
+                    SelectedAuthority = authorityCode;
+            }
+        }
+        else
+        {
+            organisations = organisations.Where(x => x.OrganisationType.Name == "LA").ToList();
+            var authorityList = organisations.Select(x => new SelectListItem { Text = x.Name, Value = x.AdministractiveDistrictCode }).ToList();
+            AuthorityList = authorityList.OrderBy(x => x.Text).ToList();
+            SelectedAuthority = authorityList[0].Value;
+            SelectedAuthorityName = authorityList[0].Text;
+            if (!string.IsNullOrEmpty(OrganisationId))
+            {
+                var organisation = organisations.FirstOrDefault(x => x.Id == OrganisationId);
+                if (organisation != null)
+                {
+                    SelectedAuthority = organisation.AdministractiveDistrictCode ?? authorityList[0].Value;
+                    SelectedAuthorityName = organisation.Name ?? authorityList[0].Value ?? authorityList[0].Text;
+                }
+            }
+        }
+
+        ModelState.Clear();
     }
 }
