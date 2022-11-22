@@ -121,10 +121,6 @@ public class RegisterUserFromInvitationModel : PageModel
             Input.OrganisationId = invitationModel.OrganisationId;
             Input.Role = invitationModel.Role;
 
-            //Input = new InputModel
-            //{
-            //    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
-            //};
             return Page();
         }
     }
