@@ -21,8 +21,6 @@ public class WhenUsingLogin
 
     public WhenUsingLogin()
     {
-
-        Mock<RoleManager<IdentityRole>> mockRoleManager = GetMockRoleManager();
         Mock<IConfiguration> mockConfiguration = new();
         Mock<IOrganisationRepository> mockOrganisationRepository = new();
         Mock<ITokenService> mockTokenService = new();
@@ -51,8 +49,7 @@ public class WhenUsingLogin
         Mock <ILogger<LoginModel>> mockLogger = new Mock<ILogger<LoginModel>>();
         _loginModel = new LoginModel(_signInManagerMock.Object, 
             mockLogger.Object, 
-            userManagerMock.Object, 
-            mockRoleManager.Object,
+            userManagerMock.Object,
             mockConfiguration.Object,
             mockOrganisationRepository.Object,
             mockTokenService.Object

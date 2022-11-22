@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
 
 using FamilyHub.IdentityServerHost.Api.Controllers;
 using FamilyHub.IdentityServerHost.Models.Entities;
@@ -23,14 +22,12 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationIdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly UserManager<ApplicationIdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly IOrganisationRepository _organisationRepository;
         private readonly ITokenService _tokenService;
 
         public LoginModel(SignInManager<ApplicationIdentityUser> signInManager, ILogger<LoginModel> logger,
             UserManager<ApplicationIdentityUser> userManager,
-            RoleManager<IdentityRole> roleManager,
             IConfiguration configuration,
             IOrganisationRepository organisationRepository,
             ITokenService tokenService)
@@ -38,7 +35,6 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
-            _roleManager = roleManager;
             _configuration = configuration;
             _organisationRepository = organisationRepository;
             _tokenService = tokenService;
@@ -49,26 +45,26 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } = default!;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IList<AuthenticationScheme> ExternalLogins { get; set; } = default!;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } = default!;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [TempData]
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; } = default!;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -82,7 +78,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
-            public string Email { get; set; }
+            public string Email { get; set; } = default!;
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -90,17 +86,17 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [DataType(DataType.Password)]
-            public string Password { get; set; }
+            public string Password { get; set; } = default!;
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Display(Name = "Remember me?")]
-            public bool RememberMe { get; set; }
+            public bool RememberMe { get; set; } = default!;
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string? returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
@@ -117,7 +113,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
 
@@ -188,8 +184,6 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
 
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInMinutes);
-
-            //await _userManager.UpdateAsync(user);
 
             _tokenService.SetToken(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo, refreshToken);
 
