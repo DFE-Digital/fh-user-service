@@ -1,18 +1,25 @@
 using FamilyHub.IdentityServerHost.Models;
+using FamilyHub.IdentityServerHost.Models.Entities;
+using FamilyHub.IdentityServerHost.Persistence.Repository;
 using FamilyHub.IdentityServerHost.Services;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Printing;
+using System.Security.Claims;
 
 namespace FamilyHub.IdentityServerHost.Pages.Organisations;
 
 public class ViewOrganisationListModel : PageModel
 {
     private readonly IApiService _apiService;
+    private readonly UserManager<ApplicationIdentityUser> _userManager;
+    private readonly IOrganisationRepository _organisationRepository;
 
     public record DisplayOrganisation : OpenReferralOrganisationDto
     {
@@ -33,9 +40,11 @@ public class ViewOrganisationListModel : PageModel
     public List<OpenReferralOrganisationDto> OpenReferralOrganisations { get; set; } = default!;
     public PaginatedList<DisplayOrganisation> PaginatedOpenReferralOrganisations { get; set; } = default!;
 
-    public ViewOrganisationListModel(IApiService apiService)
+    public ViewOrganisationListModel(IApiService apiService, UserManager<ApplicationIdentityUser> userManager, IOrganisationRepository organisationRepository)
     {
         _apiService = apiService;
+        _userManager = userManager;
+        _organisationRepository = organisationRepository;
     }
 
     public async Task OnGet(string pageNumber)
@@ -45,7 +54,7 @@ public class ViewOrganisationListModel : PageModel
             page = 1;
         }
 
-        OpenReferralOrganisations = await _apiService.GetListOpenReferralOrganisations();
+        await GetOrganisations();
 
         var totalPages = OpenReferralOrganisations.Count() / PageSize;
         if (page < 1)
@@ -69,11 +78,30 @@ public class ViewOrganisationListModel : PageModel
         await GetPage();
     }
 
-    private async Task GetPage()
+    private async Task GetOrganisations()
     {
         if (OpenReferralOrganisations == null)
+        {
             OpenReferralOrganisations = await _apiService.GetListOpenReferralOrganisations();
 
+            //Just show organisations in the LA Area
+            if (User.IsInRole("LAAdmin"))
+            {
+                var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                var user = await _userManager.FindByEmailAsync(userEmail);
+                var organisationId = _organisationRepository.GetUserOrganisationIdByUserId(user.Id);
+                var organisation = OpenReferralOrganisations.FirstOrDefault(x => x.Id == organisationId);
+                if (organisation != null)
+                {
+                    OpenReferralOrganisations = OpenReferralOrganisations.Where(x => x.AdministractiveDistrictCode == organisation.AdministractiveDistrictCode).OrderBy(x => x.Name).ToList();
+                }
+            }
+        }
+    }
+
+    private async Task GetPage()
+    {
+        await GetOrganisations();
         List<DisplayOrganisation> pagelist = default!;
 
         if (!string.IsNullOrEmpty(Search))

@@ -2,13 +2,15 @@
 
 public class SignOutLink : Link
 {
-    public SignOutLink(string href, string @class = "") : base(href, @class: @class)
+    private readonly string _userName;
+    public SignOutLink(string userName, string href, string @class = "") : base(href, @class: @class)
     {
+        _userName = userName;
     }
 
     public override string Render()
     {
-        return $"<a href = \"{Href}\" id=\"sign-out-link\" class=\"{Class}\">Sign Out</a>";
+        return $"<a href = \"{Href}\" id=\"sign-out-link\" class=\"{Class}\">Hello {_userName} Sign Out</a>";
     }
 }
 

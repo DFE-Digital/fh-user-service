@@ -47,6 +47,8 @@ public class ManageUsersModel : PageModel
 
     public string OrganisationCode { get; set; } = default!;
 
+    public string ErrorMessage { get; set; } = default!;
+
     public PaginatedList<DisplayApplicationUser> Users { get; set; } = new PaginatedList<DisplayApplicationUser>();
     public string ReturnUrl { get; set; } = default!;
 
@@ -125,8 +127,8 @@ public class ManageUsersModel : PageModel
                 Email = user.Email,
                 Roles = string.Join(", ", roles),
                 OrganisationId = organisationId,
-                OrganisationName = organisationName,
-                LocalAuthority = localAuthority
+                OrganisationName = organisationName ?? string.Empty,
+                LocalAuthority = localAuthority ?? string.Empty
             });
         }
 
@@ -213,10 +215,20 @@ public class ManageUsersModel : PageModel
             values: new { area = "Identity", code },
             protocol: Request.Scheme);
 
-        await _emailSender.SendEmailAsync(
+        try
+        {
+            await _emailSender.SendEmailAsync(
             user.Email,
             "Reset Password",
             $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl ?? string.Empty)}'>clicking here</a>.");
+        }
+        catch
+        {
+            ErrorMessage = "Unable to send email to reset password";
+            return Page();
+        }
+
+        
 
         return RedirectToPage("./ForgotPasswordConfirmation");
     }
