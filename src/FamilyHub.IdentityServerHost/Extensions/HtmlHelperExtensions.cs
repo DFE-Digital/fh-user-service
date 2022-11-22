@@ -1,6 +1,7 @@
 ﻿using FamilyHub.IdentityServerHost.Models;
 using FamilyHub.IdentityServerHost.Models.Configuration;
 using FamilyHub.IdentityServerHost.Models.Entities;
+using FamilyHub.IdentityServerHost.Services;
 using FamilyHubs.ServiceDirectoryAdminUi.Ui.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,6 +16,7 @@ public static class HtmlHelperExtensions
 {
     public static IHeaderViewModel GetHeaderViewModel(this IHtmlHelper html, bool hideMenu = false)
     {
+        bool isAbleToCallAuthenticatedServices = IsAbleToCallAuthenticatedServices(html);
         var externalLinks = (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IOptions<ExternalLinksConfiguration>)) as IOptions<ExternalLinksConfiguration>)?.Value;
         var authConfig = (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IOptions<IdentityServerOptions>)) as IOptions<IdentityServerOptions>)?.Value;
         var requestRoot = html.ViewContext.HttpContext.Request.GetRequestUrlRoot();
@@ -41,7 +43,8 @@ public static class HtmlHelperExtensions
             User = html.ViewContext.HttpContext.User,
             HashedAccountId = html.ViewContext.RouteData.Values["accountId"]?.ToString() ?? string.Empty,
         },
-        userName
+        userName,
+        isAbleToCallAuthenticatedServices
         );
 
         headerModel.SelectMenu("Finance");
@@ -52,6 +55,23 @@ public static class HtmlHelperExtensions
         }
 
         return headerModel;
+    }
+
+    private static bool IsAbleToCallAuthenticatedServices(IHtmlHelper html)
+    {
+        bool isAuthenticated = false;
+        if (html.ViewContext.HttpContext.User.Identity != null)
+            isAuthenticated = html.ViewContext.HttpContext.User.Identity.IsAuthenticated;
+        if (isAuthenticated && html.ViewContext != null && html.ViewContext.HttpContext != null && html.ViewContext.HttpContext.RequestServices != null)
+        {
+            ITokenService? tokenService = html.ViewContext.HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
+            if (tokenService != null && string.IsNullOrEmpty(tokenService.GetToken()))
+            {
+                return false;
+            }
+        }
+
+        return isAuthenticated;
     }
 
     public static IFooterViewModel GetFooterViewModel(this IHtmlHelper html)

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
 
 namespace FamilyHub.IdentityServerHost.Pages.Organisations;
 
@@ -69,7 +71,7 @@ public class OrganisationViewEditModel : PageModel
 
         if (!string.IsNullOrEmpty(Organisation.Url))
         {
-            if (!Uri.IsWellFormedUriString(Organisation.Url, UriKind.Absolute))
+            if (!ValidateUrl(Organisation.Url))
             {
                 ModelState.AddModelError("Organisation.Url", "Url is invalid");
             }
@@ -111,10 +113,18 @@ public class OrganisationViewEditModel : PageModel
         }
         else
         {
+            openReferralOrganisationWithServicesDto.Id = Guid.NewGuid().ToString();
             await _apiService.CreateOrganisation(openReferralOrganisationWithServicesDto);
         }
 
         return RedirectToPage("ViewOrganisationList");
 
+    }
+
+    public static bool ValidateUrl(string URL)
+    {
+        string Pattern = @"(http(s)?://)?([\w-]+\.)+[\w-]+[\w-]+[\.]+[\][a-z.]{2,3}$+([./?%&=]*)?";
+        Regex Rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        return Rgx.IsMatch(URL);
     }
 }

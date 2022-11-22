@@ -1,3 +1,4 @@
+using FamilyHub.IdentityServerHost.Extensions;
 using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Persistence.Repository;
 using FamilyHub.IdentityServerHost.Services;
@@ -119,7 +120,6 @@ using (var scope = app.Services.CreateScope())
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
         await initialiser.InitialiseAsync(builder.Configuration);
         await initialiser.SeedAsync();
-
     }
     catch (Exception ex)
     {

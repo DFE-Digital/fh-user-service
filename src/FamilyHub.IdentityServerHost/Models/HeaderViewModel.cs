@@ -1,6 +1,7 @@
 ﻿using FamilyHub.IdentityServerHost.Models.Configuration;
 using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Models.Links;
+using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace FamilyHub.IdentityServerHost.Models;
@@ -25,6 +26,7 @@ public class HeaderViewModel : IHeaderViewModel
         IHeaderConfiguration configuration,
         IUserContext userContext,
         string userName,
+        bool isAbleToCallAuthenticatedServices,
         ILinkCollection? linkCollection = null,
         ILinkHelper? linkHelper = null,
         IUrlHelper? urlHelper = null,
@@ -46,24 +48,16 @@ public class HeaderViewModel : IHeaderViewModel
 
         // Header links
         AddOrUpdateLink(new GovUk(GovUkHref, isLegacy: UseLegacyStyles));
-        
-        if (userContext != null && userContext.User != null && userContext.User.Identity != null)
+
+        if (isAbleToCallAuthenticatedServices)
         {
-            
-            if (userContext.User.Identity.IsAuthenticated)
-            {
-                AddOrUpdateLink(new HomeLink("/Index", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-                AddOrUpdateLink(new SignOutLink(userName, "/Identity/Account/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-            }
-            else
-            {
-                AddOrUpdateLink(new SignInLink("/Identity/Account/Login", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-            }
+            AddOrUpdateLink(new HomeLink("/Index", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+            AddOrUpdateLink(new SignOutLink(userName, "/Identity/Account/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
         }
-
-
-
-        
+        else
+        {
+            AddOrUpdateLink(new SignInLink("/Identity/Account/Login", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+        }
     }
 
     public void HideMenu()
