@@ -87,24 +87,24 @@ public class AuthenticateController : ControllerBase
         return Unauthorized();
     }
 
-    
+
     //protected Dictionary<string, string> GetTokenInfo(string token)
     //{
     //    var TokenInfo = new Dictionary<string, string>();
 
-    //    var handler = new JwtSecurityTokenHandler();
-    //    var jwtSecurityToken = handler.ReadJwtToken(token);
-    //    var claims = jwtSecurityToken.Claims.ToList();
+//    var handler = new JwtSecurityTokenHandler();
+//    var jwtSecurityToken = handler.ReadJwtToken(token);
+//    var claims = jwtSecurityToken.Claims.ToList();
 
-    //    foreach (var claim in claims)
-    //    {
-    //        TokenInfo.Add(claim.Type, claim.Value);
-    //    }
+//    foreach (var claim in claims)
+//    {
+//        TokenInfo.Add(claim.Type, claim.Value);
+//    }
 
-    //    return TokenInfo;
-    //}
-    
+//    return TokenInfo;
+//}
 
+#if _USE_REGISTRATION_API
     [HttpPost]
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] ApiRegisterModel model)
@@ -126,39 +126,40 @@ public class AuthenticateController : ControllerBase
         return Ok(new Response { Status = "Success", Message = "User created successfully!" });
     }
 
-    //[HttpPost]
-    //[Route("register-admin")]
-    //public async Task<IActionResult> RegisterAdmin([FromBody] ApiRegisterModel model)
-    //{
-    //    var userExists = await _userManager.FindByNameAsync(model.Username);
-    //    if (userExists != null)
-    //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+    [HttpPost]
+    [Route("register-admin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] ApiRegisterModel model)
+    {
+        var userExists = await _userManager.FindByNameAsync(model.Username);
+        if (userExists != null)
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
 
-    //    ApplicationIdentityUser user = new()
-    //    {
-    //        Email = model.Email,
-    //        SecurityStamp = Guid.NewGuid().ToString(),
-    //        UserName = model.Username
-    //    };
-    //    var result = await _userManager.CreateAsync(user, model.Password);
-    //    if (!result.Succeeded)
-    //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+        ApplicationIdentityUser user = new()
+        {
+            Email = model.Email,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            UserName = model.Username
+        };
+        var result = await _userManager.CreateAsync(user, model.Password);
+        if (!result.Succeeded)
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
-    //    if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-    //        await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-    //    if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-    //        await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+        if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+        if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+            await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
-    //    if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-    //    {
-    //        await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-    //    }
-    //    if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-    //    {
-    //        await _userManager.AddToRoleAsync(user, UserRoles.User);
-    //    }
-    //    return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-    //}
+        if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+        {
+            await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+        }
+        if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+        {
+            await _userManager.AddToRoleAsync(user, UserRoles.User);
+        }
+        return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+    }
+#endif
 
     [HttpPost]
     [Route("refresh-token")]
@@ -272,7 +273,7 @@ public class AuthenticateController : ControllerBase
 
     }
 
-    private static string GenerateRefreshToken()
+    internal static string GenerateRefreshToken()
     {
         var randomNumber = new byte[64];
         using var rng = RandomNumberGenerator.Create();

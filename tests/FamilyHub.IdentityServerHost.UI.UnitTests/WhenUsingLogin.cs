@@ -1,11 +1,14 @@
 using FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account;
 using FamilyHub.IdentityServerHost.Models.Entities;
+using FamilyHub.IdentityServerHost.Persistence.Repository;
+using FamilyHub.IdentityServerHost.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -18,6 +21,12 @@ public class WhenUsingLogin
 
     public WhenUsingLogin()
     {
+
+        Mock<RoleManager<IdentityRole>> mockRoleManager = GetMockRoleManager();
+        Mock<IConfiguration> mockConfiguration = new();
+        Mock<IOrganisationRepository> mockOrganisationRepository = new();
+        Mock<ITokenService> mockTokenService = new();
+
         var userManagerMock = new Mock<UserManager<ApplicationIdentityUser>>(
     /* IUserStore<TUser> store */Mock.Of<IUserStore<ApplicationIdentityUser>>(),
     /* IOptions<IdentityOptions> optionsAccessor */null,
@@ -37,10 +46,17 @@ public class WhenUsingLogin
             /* ILogger<SignInManager<TUser>> logger */null,
             /* IAuthenticationSchemeProvider schemes */null,
             /* IUserConfirmation<TUser> confirmation */null);
+        
 
-        //Mock<SignInManager<ApplicationIdentityUser>> mockSignInManager = new Mock<SignInManager<ApplicationIdentityUser>>();    
-        Mock<ILogger<LoginModel>> mockLogger = new Mock<ILogger<LoginModel>>();
-        _loginModel = new LoginModel(_signInManagerMock.Object, mockLogger.Object);
+        Mock <ILogger<LoginModel>> mockLogger = new Mock<ILogger<LoginModel>>();
+        _loginModel = new LoginModel(_signInManagerMock.Object, 
+            mockLogger.Object, 
+            userManagerMock.Object, 
+            mockRoleManager.Object,
+            mockConfiguration.Object,
+            mockOrganisationRepository.Object,
+            mockTokenService.Object
+            );
 
         var mockHttpContext = new Mock<HttpContext>();
         _authServiceMock = new Mock<IAuthenticationService>();
@@ -53,7 +69,25 @@ public class WhenUsingLogin
 
         _loginModel.PageContext.HttpContext = mockHttpContext.Object;
 
+        userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(new ApplicationIdentityUser() { UserName = "DfEAdmin@email.com", RefreshToken = "abcd", RefreshTokenExpiryTime = DateTime.Now.AddHours(1) });
+        userManagerMock.Setup(x => x.GetRolesAsync(It.IsAny<ApplicationIdentityUser>())).ReturnsAsync(new List<string> { "DfEAdmin"});
+        mockConfiguration.Setup(x => x["JWT:Secret"]).Returns("JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xcvb");
+        mockConfiguration.Setup(x => x["JWT:TokenValidityInMinutes"]).Returns("60");
+
+        mockConfiguration.Setup(x => x["JWT:ValidIssuer"]).Returns("ValidIssuer");
+        mockConfiguration.Setup(x => x["JWT:ValidAudience"]).Returns("ValidAudience");
+
+        mockTokenService.Setup(x => x.SetToken(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>()));
+
         _loginModel.OnGetAsync("~/").Wait();
+    }
+
+    public static Mock<RoleManager<IdentityRole>> GetMockRoleManager()
+    {
+        var roleStore = new Mock<IRoleStore<IdentityRole>>();
+        return new Mock<RoleManager<IdentityRole>>(
+                     roleStore.Object, null, null, null, null);
+
     }
 
     [Fact]

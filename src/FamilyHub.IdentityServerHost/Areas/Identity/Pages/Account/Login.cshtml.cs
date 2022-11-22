@@ -2,19 +2,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using FamilyHub.IdentityServerHost.Api.Controllers;
+using FamilyHub.IdentityServerHost.Models.Entities;
+using FamilyHub.IdentityServerHost.Persistence.Repository;
+using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using FamilyHub.IdentityServerHost.Models.Entities;
+using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
 {
@@ -22,11 +22,26 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationIdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<ApplicationIdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IConfiguration _configuration;
+        private readonly IOrganisationRepository _organisationRepository;
+        private readonly ITokenService _tokenService;
 
-        public LoginModel(SignInManager<ApplicationIdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationIdentityUser> signInManager, ILogger<LoginModel> logger,
+            UserManager<ApplicationIdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration,
+            IOrganisationRepository organisationRepository,
+            ITokenService tokenService)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _configuration = configuration;
+            _organisationRepository = organisationRepository;
+            _tokenService = tokenService;
         }
 
         /// <summary>
@@ -116,6 +131,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    await SetToken();
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -136,6 +152,66 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private async Task SetToken()
+        {
+            _tokenService.ClearTokens();
+
+            var user = await _userManager.FindByNameAsync(Input.Email);
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                };
+
+            foreach (var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
+
+            string organisationId = _organisationRepository.GetUserOrganisationIdByUserId(user.Id);
+            if (!string.IsNullOrEmpty(organisationId))
+            {
+                authClaims.Add(new Claim("OpenReferralOrganisationId", organisationId));
+            }
+
+            var token = CreateToken(authClaims);
+            var refreshToken = AuthenticateController.GenerateRefreshToken();
+
+            if (!int.TryParse(_configuration["JWT:RefreshTokenValidityInMinutes"], out int refreshTokenValidityInMinutes))
+            {
+                refreshTokenValidityInMinutes = 120;
+            }
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInMinutes);
+
+            //await _userManager.UpdateAsync(user);
+
+            _tokenService.SetToken(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo, refreshToken);
+
+        }
+
+        private JwtSecurityToken CreateToken(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            if (!int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes))
+            {
+                tokenValidityInMinutes = 30;
+            }
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            return token;
         }
     }
 }
