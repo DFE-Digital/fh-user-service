@@ -196,9 +196,7 @@ public class ApplicationDbContextInitialiser
             {
         new Claim(JwtClaimTypes.Name, person),
         new Claim(JwtClaimTypes.GivenName, person),
-        new Claim(JwtClaimTypes.Role, role),
-        //new Claim(JwtClaimTypes.FamilyName, "Smith"),
-        //new Claim(JwtClaimTypes.WebSite, "http://warmhandover.gov.uk"),
+        new Claim(JwtClaimTypes.Role, role)
             }).Result;
             if (!result.Succeeded)
             {
