@@ -240,11 +240,10 @@ public class RegisterUserFromInvitationModel : PageModel
         var roles = String.Join(", ", Input.Role.ToArray());
         var result = _userManager.AddClaimsAsync(user, new Claim[]
         {
-        new Claim(JwtClaimTypes.Name, user.UserName),
-        new Claim(JwtClaimTypes.GivenName, user.NormalizedUserName),
-        new Claim(JwtClaimTypes.Role, roles),
-            //new Claim(JwtClaimTypes.FamilyName, "Smith"),
-            //new Claim(JwtClaimTypes.WebSite, "http://warmhandover.gov.uk"),
+            new Claim("UserId", user.Id),
+            new Claim(JwtClaimTypes.Name, user.UserName),
+            new Claim(JwtClaimTypes.GivenName, user.NormalizedUserName),
+            new Claim(JwtClaimTypes.Role, roles)
         }).Result;
         if (!result.Succeeded)
         {
