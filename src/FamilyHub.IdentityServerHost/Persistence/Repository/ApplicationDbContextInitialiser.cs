@@ -20,6 +20,7 @@ public class ApplicationDbContextInitialiser
     private readonly IApiService _apiService;
     private readonly IUserStore<ApplicationIdentityUser> _userStore;
     private readonly IUserEmailStore<ApplicationIdentityUser> _emailStore;
+    private bool _isProduction = false;
 
     private List<OpenReferralOrganisationDto> _openReferralOrganisationDtos = default!;
 
@@ -40,10 +41,12 @@ public class ApplicationDbContextInitialiser
         _emailStore = GetEmailStore();
     }
 
-    public async Task InitialiseAsync(IConfiguration configuration)
+    public async Task InitialiseAsync(IConfiguration configuration, bool isProduction)
     {
         try
         {
+            _isProduction = isProduction;
+
             if (_context.Database.IsInMemory())
             {
                 _context.Database.EnsureDeleted();
@@ -132,24 +135,32 @@ public class ApplicationDbContextInitialiser
 
         _openReferralOrganisationDtos = await _apiService.GetListOpenReferralOrganisations();
 
-        string[] LAAdmins = new string[] { "BtlLAAdmin", "LanLAAdmin", "LbrLAAdmin", "SalLAAdmin", "SufLAAdmin", "TowLAAdmin" };
-        string[] SvcAdmins = new string[] { "BtlVCSAdmin", "LanVCSAdmin", "LbrVCSAdmin", "SalVCSAdmin", "SufVCSAdmin", "TowVCSAdmin" };
-        string[] Pro = new string[] { "BtlPro", "LanPro", "LbrPro", "SalPro", "SufPro", "TowPro" };
-        string[] Websites = new string[] { "https://www.bristol.gov.uk/", "https://www.lancashire.gov.uk/", "https://www.redbridge.gov.uk/", "https://www.salford.gov.uk/", "https://www.suffolk.gov.uk/", "https://www.towerhamlets.gov.uk/Home.aspx" };
+        if (_isProduction)
+        {
+            await AddUser(_userManager, "Ben.MACINNES@education.gov.uk", "8qBoCcDrvP$", "DfEAdmin", "www.warmhandover.gov.uk");
+            await AddUser(_userManager, "emily.chomitzki@digital.education.gov.uk", "gXT8lp9qOW$", "DfEAdmin", "www.warmhandover.gov.uk");
+        }
+        else
+        {
+            string[] LAAdmins = new string[] { "BtlLAAdmin", "LanLAAdmin", "LbrLAAdmin", "SalLAAdmin", "SufLAAdmin", "TowLAAdmin" };
+            string[] SvcAdmins = new string[] { "BtlVCSAdmin", "LanVCSAdmin", "LbrVCSAdmin", "SalVCSAdmin", "SufVCSAdmin", "TowVCSAdmin" };
+            string[] Pro = new string[] { "BtlPro", "LanPro", "LbrPro", "SalPro", "SufPro", "TowPro" };
+            string[] Websites = new string[] { "https://www.bristol.gov.uk/", "https://www.lancashire.gov.uk/", "https://www.redbridge.gov.uk/", "https://www.salford.gov.uk/", "https://www.suffolk.gov.uk/", "https://www.towerhamlets.gov.uk/Home.aspx" };
 
-        //await AddUser(_userManager, "martin.belton@digital.education.gov.uk", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
-        await AddUser(_userManager, "DfEAdmin", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
-        for (int i = 0; i < LAAdmins.Length; i++)
-        {
-            await AddUser(_userManager, LAAdmins[i], "Pass123$", "LAAdmin", Websites[i]);
-        }
-        for (int i = 0; i < SvcAdmins.Length; i++)
-        {
-            await AddUser(_userManager, SvcAdmins[i], "Pass123$", "VCSAdmin", Websites[i]);
-        }
-        for (int i = 0; i < Pro.Length; i++)
-        {
-            await AddUser(_userManager, Pro[i], "Pass123$", "Professional", Websites[i]);
+            //await AddUser(_userManager, "martin.belton@digital.education.gov.uk", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
+            await AddUser(_userManager, "DfEAdmin", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
+            for (int i = 0; i < LAAdmins.Length; i++)
+            {
+                await AddUser(_userManager, LAAdmins[i], "Pass123$", "LAAdmin", Websites[i]);
+            }
+            for (int i = 0; i < SvcAdmins.Length; i++)
+            {
+                await AddUser(_userManager, SvcAdmins[i], "Pass123$", "VCSAdmin", Websites[i]);
+            }
+            for (int i = 0; i < Pro.Length; i++)
+            {
+                await AddUser(_userManager, Pro[i], "Pass123$", "Professional", Websites[i]);
+            }
         }
     }
 
@@ -174,7 +185,13 @@ public class ApplicationDbContextInitialiser
         {
             user = CreateUser();
             user.EmailConfirmed = true;
-            string email = $"{person}@email.com";
+            string email = string.Empty;
+
+            if (!_isProduction)
+            {
+                email = $"{person}@email.com";       
+            }
+            
             if (person.Contains("@"))
                 email = person;
 

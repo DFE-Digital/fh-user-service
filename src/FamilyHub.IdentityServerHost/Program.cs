@@ -118,7 +118,7 @@ using (var scope = app.Services.CreateScope())
 
         // Seed Database
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.InitialiseAsync(builder.Configuration);
+        await initialiser.InitialiseAsync(builder.Configuration, app.Environment.IsProduction());
         await initialiser.SeedAsync();
     }
     catch (Exception ex)
