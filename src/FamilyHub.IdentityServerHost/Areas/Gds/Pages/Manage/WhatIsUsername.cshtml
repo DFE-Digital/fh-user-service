@@ -1,0 +1,30 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.WhatIsUsernameModel
+@{
+}
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <span class="govuk-fieldset__heading">
+          What is the user's full name?
+        </span>
+      </legend>
+      <form method="post" novalidate data-validate='my-form-validation'>
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <div class="govuk-form-group">
+          <label class="govuk-label govuk-visually-hidden" for="fullName">Full name</label>
+        <input class="govuk-input" id="FullName" name="FullName" type="text" autocomplete="off">
+        <span asp-validation-for="FullName" class="text-danger"></span>
+      </div>
+
+      <button type="submit" class="govuk-button" asp-route-role="@Model.Role">
+        Continue
+      </button>
+    </form>
+    </fieldset>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -9,6 +9,8 @@ namespace FamilyHub.IdentityServerHost.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly ITokenService _tokenService;
 
+        public bool UseOrginalCode { get; set; } = false;
+
         public IndexModel(ITokenService tokenService, ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -17,11 +19,32 @@ namespace FamilyHub.IdentityServerHost.Pages
 
         public IActionResult OnGet()
         {
-            if (string.IsNullOrEmpty(_tokenService.GetToken()))
+            if (UseOrginalCode)
             {
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
+                if (string.IsNullOrEmpty(_tokenService.GetToken()))
+                {
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(_tokenService.GetToken()))
+                {
+                    return RedirectToPage("/Manage/Homepage", new { area = "Gds" });
+                }
             }
             
+            
+            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            if (string.IsNullOrEmpty(_tokenService.GetToken()))
+            {
+                return RedirectToPage("/Account/Login", new { area = "Gds" });
+            }
+
             return Page();
         }
     }
