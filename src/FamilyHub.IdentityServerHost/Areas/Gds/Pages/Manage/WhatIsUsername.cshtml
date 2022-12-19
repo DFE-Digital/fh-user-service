@@ -22,6 +22,7 @@ else
       </legend>
       <form method="post" novalidate data-validate='my-form-validation'>
       <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      
       <div class="govuk-form-group">
           <label class="govuk-label govuk-visually-hidden" for="fullName">Full name</label>
         <input class="govuk-input" id="FullName" name="FullName" type="text" value="@Model?.FullName" autocomplete="off">

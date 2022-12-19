@@ -9,6 +9,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
 public class CheckAccountDetailsModel : PageModel
 {
     private readonly IRedisCacheService _redisCacheService;
+    public string LastPage { get; set; } = default!;
     public string RoleName { get; set; } = default!;
 
     public NewUser? NewUser { get; set; } = default!;
@@ -20,7 +21,8 @@ public class CheckAccountDetailsModel : PageModel
 
     public void OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("CheckAccountDetails");
+        LastPage = _redisCacheService.RetrieveLastPageName();
+        _redisCacheService.StoreCurrentPageName("/Manage/CheckAccountDetails");
         NewUser = _redisCacheService.RetrieveNewUser();
         GetRoleFullName();
 

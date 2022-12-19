@@ -23,7 +23,7 @@ public class WhatIsUsernameModel : PageModel
 
     public void OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("WhatIsUsername");
+        _redisCacheService.StoreCurrentPageName("/Manage/WhatIsUsername");
         NewUser = _redisCacheService.RetrieveNewUser();
         if (NewUser != null)
         {

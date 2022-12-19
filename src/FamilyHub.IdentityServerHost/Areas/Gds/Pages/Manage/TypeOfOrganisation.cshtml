@@ -1,0 +1,44 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.TypeOfOrganisationModel
+@{
+}
+
+<a asp-page="/Manage/Homepage" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <span class="govuk-fieldset__heading">
+                What do you want to add?
+            </span>
+        </legend>
+        <form method="post" novalidate data-validate='my-form-validation'>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <span asp-validation-for="OrganisationTypeSelection" class="text-danger"></span>
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        @foreach(var item in Model.OrganisationTypes)
+                        {
+                            <div class="govuk-radios__item">
+                                <input asp-for="OrganisationTypeSelection" class="govuk-radios__input" type="radio" value="@Model.OrganisationTypes.First(x => x.Name == item.Name).Name" checked="@(string.IsNullOrEmpty(Model.OrganisationTypeSelection) && Model.OrganisationTypeSelection == item.Name)" />
+                                <label class="govuk-label govuk-radios__label" for="OrganisationTypeSelection">
+                                    @item.Description
+                                </label>
+                            </div>
+                        }
+                    </div>
+
+                </fieldset>
+            </div>
+
+            <button class="govuk-button">
+                Continue
+            </button>
+        </form>
+    </fieldset>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

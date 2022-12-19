@@ -3,10 +3,7 @@
 @{
 }
 
-@if(User.IsInRole("DfEAdmin"))
-{
-    <a asp-page="/Manage/WhatIsUsername"   class="govuk-back-link" data-testid="back-button">Back</a>
-}
+<a asp-page="@Model.LastPage" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
     <fieldset class="govuk-fieldset">

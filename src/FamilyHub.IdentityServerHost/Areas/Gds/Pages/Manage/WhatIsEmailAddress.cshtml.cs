@@ -21,7 +21,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage
         public string EmailAddress { get; set; } = default!;
         public void OnGet()
         {
-            _redisCacheService.StoreCurrentPageName("WhatIsEmailAddress");
+            _redisCacheService.StoreCurrentPageName("/Manage/WhatIsEmailAddress");
             NewUser = _redisCacheService.RetrieveNewUser();
             if (NewUser != null)
             {

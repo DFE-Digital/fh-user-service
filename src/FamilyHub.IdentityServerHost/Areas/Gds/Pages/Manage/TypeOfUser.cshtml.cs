@@ -27,7 +27,7 @@ public class TypeOfUserModel : PageModel
     }
     public void OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("TypeOfUser");
+        _redisCacheService.StoreCurrentPageName("/Manage/TypeOfUser");
         NewUser = _redisCacheService.RetrieveNewUser();
         if (NewUser != null) 
         {

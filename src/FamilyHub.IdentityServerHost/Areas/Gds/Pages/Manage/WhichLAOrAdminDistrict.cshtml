@@ -1,0 +1,30 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.WhichLAOrAdminDistrictModel
+@{
+}
+
+<a asp-page="/Manage/TypeOfOrganisation" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+     <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <h1 class="govuk-fieldset__heading">
+          Which local authority is the organisation in?
+        </h1>
+      </legend>
+      <form method="post" data-validate='my-form-validation'>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <span asp-validation-for="OrganisationCode" class="text-danger"></span>
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="OrganisationCode">
+            <!---Select local authority--->
+          </label>
+          <select class="govuk-select" id="OrganisationCode" name="OrganisationCode" asp-for="OrganisationCode" asp-items="@Model.OrganisationSelectionList"></select>
+        </div>
+
+      <button class="govuk-button">
+        Continue
+      </button>
+    </form>
+    </fieldset>
+</main>

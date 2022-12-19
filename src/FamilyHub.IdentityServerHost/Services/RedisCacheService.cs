@@ -11,6 +11,8 @@ public interface IRedisCacheService
     NewUser? RetrieveNewUser();
     void StoreNewUser(NewUser? vm);
     void ResetNewUser();
+    NewOrganisation? RetrieveNewOrganisation();
+    void StoreNewOrganisation(NewOrganisation? vm);
     void ResetLastPageName();
 }
 
@@ -41,6 +43,18 @@ public class RedisCacheService : IRedisCacheService
         }
     }
 
+    public string KeyOrganisation
+    {
+        get
+        {
+            if (UserId != null)
+            {
+                return $"_NewOrganisation{UserId}";
+            }
+            return "_NewOrganisation";
+        }
+    }
+
     private readonly IRedisCache _redisCache;
     private readonly int _timespanMinites;
 
@@ -49,6 +63,16 @@ public class RedisCacheService : IRedisCacheService
         _redisCache = redisCache;
         _timespanMinites = configuration.GetValue<int>("SessionTimeOutMinutes");
         UserId = httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    }
+
+    public NewOrganisation? RetrieveNewOrganisation()
+    {
+        return _redisCache.GetValue<NewOrganisation>(KeyOrganisation);
+    }
+    public void StoreNewOrganisation(NewOrganisation? vm)
+    {
+        if (vm != null)
+            _redisCache.SetValue(KeyOrganisation, vm, _timespanMinites);
     }
 
     public NewUser? RetrieveNewUser()

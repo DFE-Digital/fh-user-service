@@ -38,7 +38,7 @@ public class WhichOrganisationModel : PageModel
     }
     public async Task OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("WhichOrganisation");
+        _redisCacheService.StoreCurrentPageName("/Manage/WhichOrganisation");
         NewUser = _redisCacheService.RetrieveNewUser();
         if(NewUser != null) 
         {
