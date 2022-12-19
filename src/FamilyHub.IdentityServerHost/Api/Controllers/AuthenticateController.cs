@@ -237,7 +237,7 @@ public class AuthenticateController : ControllerBase
 
     private JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ?? string.Empty));
         if (!int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes))
         {
             tokenValidityInMinutes = 30;
@@ -261,7 +261,7 @@ public class AuthenticateController : ControllerBase
             ValidateAudience = false,
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ?? string.Empty)),
             ValidateLifetime = false
         };
 

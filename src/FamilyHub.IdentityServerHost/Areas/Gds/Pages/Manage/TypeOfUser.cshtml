@@ -3,6 +3,8 @@
 @{
 }
 
+<a asp-page="/Manage/Homepage" class="govuk-back-link" data-testid="back-button">Back</a>
+
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
     <fieldset class="govuk-fieldset">
@@ -20,7 +22,7 @@
                         @if(Model.AvailableRoles.Any(x => x.Name == "DfEAdmin"))
                         {
                             <div class="govuk-radios__item">
-                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "DfEAdmin").Name" />
+                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "DfEAdmin").Name" checked="@(string.IsNullOrEmpty(Model.RoleSelection) && Model.RoleSelection == "DfEAdmin")"/>
                                 <label class="govuk-label govuk-radios__label" for="userType">
                                     Department for Education administrator
                                 </label>
@@ -31,7 +33,7 @@
                         @if(Model.AvailableRoles.Any(x => x.Name == "LAAdmin"))
                         {
                             <div class="govuk-radios__item">
-                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "LAAdmin").Name" />
+                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "LAAdmin").Name" checked="@(string.IsNullOrEmpty(Model.RoleSelection) && Model.RoleSelection == "LAAdmin")" />
                                 <label class="govuk-label govuk-radios__label" for="userType">
                                     Local authority administrator
                                 </label>
@@ -41,7 +43,7 @@
                         @if(Model.AvailableRoles.Any(x => x.Name == "VCSAdmin"))
                         {
                             <div class="govuk-radios__item">
-                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "VCSAdmin").Name" />
+                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "VCSAdmin").Name" checked="@(string.IsNullOrEmpty(Model.RoleSelection) && Model.RoleSelection == "VCSAdmin")" />
                                 <label class="govuk-label govuk-radios__label" for="userType">
                                     Voluntary community organisation administrator
                                 </label>
@@ -51,7 +53,7 @@
                         @if(Model.AvailableRoles.Any(x => x.Name == "Professional"))
                         {
                             <div class="govuk-radios__item">
-                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "Professional").Name" />
+                                <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "Professional").Name" checked="@(string.IsNullOrEmpty(Model.RoleSelection) && Model.RoleSelection == "Professional")" />
                                 <label class="govuk-label govuk-radios__label" for="userType">
                                     Voluntary community organisation administrator
                                 </label>

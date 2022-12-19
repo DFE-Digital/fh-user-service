@@ -1,3 +1,5 @@
+using FamilyHub.IdentityServerHost.Models;
+using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -6,35 +8,44 @@ namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage
 {
     public class WhatIsEmailAddressModel : PageModel
     {
-        public string Role { get; private set; } = default!;
+        private readonly IRedisCacheService _redisCacheService;
+        public NewUser? NewUser { get; set; } = default!;
 
-        public string FullName { get; private set; } = default!;
+        public WhatIsEmailAddressModel(IRedisCacheService redisCacheService)
+        {
+            _redisCacheService = redisCacheService;
+        }
 
         [Required]
         [BindProperty]
         public string EmailAddress { get; set; } = default!;
-        public void OnGet(string role, string fullName)
+        public void OnGet()
         {
-            Role = role;
-            FullName = fullName;
+            _redisCacheService.StoreCurrentPageName("WhatIsEmailAddress");
+            NewUser = _redisCacheService.RetrieveNewUser();
+            if (NewUser != null)
+            {
+                EmailAddress = NewUser.EmailAddress;
+            }
         }
 
-        public IActionResult OnPost(string role, string fullName)
+        public IActionResult OnPost()
         {
-            Role = role;
-            FullName = fullName;
-
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
+            NewUser = _redisCacheService.RetrieveNewUser();
+            if (NewUser != null)
+            {
+                NewUser.EmailAddress = EmailAddress;
+            }
+            _redisCacheService.StoreNewUser(NewUser);
+
             return RedirectToPage("/Manage/CheckAccountDetails", new
             {
                 area = "Gds",
-                role = role,
-                fullName = FullName,
-                emailAddress = EmailAddress
             });
         }
     }

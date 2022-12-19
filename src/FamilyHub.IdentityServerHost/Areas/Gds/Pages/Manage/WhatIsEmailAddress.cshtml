@@ -3,6 +3,9 @@
 @{
 }
 
+<a asp-page="/Manage/WhatIsUsername"  class="govuk-back-link" data-testid="back-button">Back</a>
+
+
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -17,11 +20,11 @@
       <form method="post" novalidate data-validate='my-form-validation'>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="govuk-form-group">
-          <input class="govuk-input" id="EmailAddress" name="EmailAddress" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
+          <input class="govuk-input" id="EmailAddress" name="EmailAddress" type="email" value="@Model.EmailAddress" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
           <span asp-validation-for="EmailAddress" class="text-danger"></span>
         </div>
 
-      <button type="submit" class="govuk-button" asp-route-role="@Model.Role" asp-route-fullName="@Model.FullName">
+            <button type="submit" class="govuk-button">
         Continue
       </button>
     </form>

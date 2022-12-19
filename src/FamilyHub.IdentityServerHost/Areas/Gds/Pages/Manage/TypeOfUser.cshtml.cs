@@ -1,4 +1,6 @@
+using FamilyHub.IdentityServerHost.Models;
 using FamilyHub.IdentityServerHost.Models.Entities;
+using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,19 +10,30 @@ namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
 
 public class TypeOfUserModel : PageModel
 {
+    private readonly IRedisCacheService _redisCacheService;
     private readonly RoleManager<IdentityRole> _roleManager;
+
+    public NewUser? NewUser { get; set; } = default!;
     public List<IdentityRole> AvailableRoles { get; set; } = new List<IdentityRole>();
 
     [BindProperty]
     [Required]
     public string RoleSelection { get; set; } = default!;
 
-    public TypeOfUserModel(RoleManager<IdentityRole> roleManager)
+    public TypeOfUserModel(IRedisCacheService redisCacheService, RoleManager<IdentityRole> roleManager)
     { 
         _roleManager = roleManager;
+        _redisCacheService = redisCacheService;
     }
     public void OnGet()
     {
+        _redisCacheService.StoreCurrentPageName("TypeOfUser");
+        NewUser = _redisCacheService.RetrieveNewUser();
+        if (NewUser != null) 
+        {
+            RoleSelection = NewUser.Role;
+        }
+        
         InitPage();
     }
 
@@ -38,10 +51,25 @@ public class TypeOfUserModel : PageModel
             return Page();
         }
 
+        NewUser = _redisCacheService.RetrieveNewUser();
+        if (NewUser == null) 
+        { 
+            NewUser = new NewUser();
+        }
+        NewUser.Role = RoleSelection;
+        _redisCacheService.StoreNewUser(NewUser);
+
+        if (RoleSelection != "DfEAdmin")
+        {
+            return RedirectToPage("/Manage/WhichOrganisation", new
+            {
+                area = "Gds",
+            });
+        }
+
         return RedirectToPage("/Manage/WhatIsUsername", new
         {
             area = "Gds",
-            role = RoleSelection
         });
     }
 

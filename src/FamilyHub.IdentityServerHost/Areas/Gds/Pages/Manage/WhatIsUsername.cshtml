@@ -3,6 +3,16 @@
 @{
 }
 
+@if(@Model?.NewUser?.Role == "DfEAdmin")
+{
+    <a asp-page="/Manage/TypeOfUser" class="govuk-back-link" data-testid="back-button">Back</a>
+}
+else
+{
+    <a asp-page="/Manage/WhichOrganisation" class="govuk-back-link" data-testid="back-button">Back</a>
+}
+
+
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -14,11 +24,11 @@
       <div asp-validation-summary="ModelOnly" class="text-danger"></div>
       <div class="govuk-form-group">
           <label class="govuk-label govuk-visually-hidden" for="fullName">Full name</label>
-        <input class="govuk-input" id="FullName" name="FullName" type="text" autocomplete="off">
+        <input class="govuk-input" id="FullName" name="FullName" type="text" value="@Model?.FullName" autocomplete="off">
         <span asp-validation-for="FullName" class="text-danger"></span>
       </div>
 
-      <button type="submit" class="govuk-button" asp-route-role="@Model.Role">
+            <button type="submit" class="govuk-button" >
         Continue
       </button>
     </form>

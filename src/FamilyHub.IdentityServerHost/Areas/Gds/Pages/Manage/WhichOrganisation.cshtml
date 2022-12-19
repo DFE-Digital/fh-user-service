@@ -1,0 +1,33 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.WhichOrganisationModel
+@{
+}
+
+<a asp-page="/Manage/TypeOfUser" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <div>
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <span class="govuk-fieldset__heading">
+              Which local authority is the account for?
+            </span>
+          </legend>
+          <form method="post" novalidate data-validate='my-form-validation'>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="localAuthority">
+                <!---Select local authority--->
+              </label>
+                    <select class="govuk-select" id="OrganisationCode" name="OrganisationCode" asp-for="OrganisationCode" asp-items="@Model.OrganisationSelectionList"></select>
+                </div>
+
+          <button class="govuk-button">
+            Continue
+          </button>
+        </form>
+     
+        </fieldset>
+  </div>
+
+</main>

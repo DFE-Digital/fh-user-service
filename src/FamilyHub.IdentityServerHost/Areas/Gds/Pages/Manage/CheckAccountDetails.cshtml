@@ -3,6 +3,11 @@
 @{
 }
 
+@if(User.IsInRole("DfEAdmin"))
+{
+    <a asp-page="/Manage/WhatIsUsername"   class="govuk-back-link" data-testid="back-button">Back</a>
+}
+
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -20,11 +25,27 @@
                     @Model.RoleName
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/TypeOfUser" asp-route-role="@Model.Role" asp-route-fullName="@Model.FullName" asp-route-emailAddress="@Model.EmailAddress">
+                    <a class="govuk-link" asp-page="/Manage/TypeOfUser">
                         Change<span class="govuk-visually-hidden"> user type</span>
                     </a>
                 </dd>
             </div>
+            @if(Model?.NewUser?.Role != "DfEAdmin")
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Organisation
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model?.NewUser?.OrganisationName
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" asp-page="/Manage/WhichOrganisation" >
+                            Change<span class="govuk-visually-hidden"> name</span>
+                        </a>
+                    </dd>
+                </div>
+            }
             @*{% if data['userType'] === 'Local authority administrator' %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
@@ -88,10 +109,10 @@
                     Name
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Model.FullName
+                    @Model?.NewUser?.FullName
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/WhatIsUsername" asp-route-role="@Model.Role" asp-route-fullName="@Model.FullName" asp-route-emailAddress="@Model.EmailAddress">
+                    <a class="govuk-link" asp-page="/Manage/WhatIsUsername" >
                         Change<span class="govuk-visually-hidden"> name</span>
                     </a>
                 </dd>
@@ -101,10 +122,10 @@
                     Email address
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Model.EmailAddress
+                    @Model?.NewUser?.EmailAddress
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/WhatIsEmailAddress" asp-route-role="@Model.Role" asp-route-fullName="@Model.FullName" asp-route-emailAddress="@Model.EmailAddress">
+                    <a class="govuk-link" asp-page="/Manage/WhatIsEmailAddress" >
                         Change<span class="govuk-visually-hidden"> email address</span>
                     </a>
                 </dd>
@@ -113,7 +134,7 @@
 
         <form method="post">
 
-            <button type="submit" class="govuk-button" asp-route-role="@Model.Role" asp-route-fullName="@Model.FullName" asp-route-emailAddress="@Model.EmailAddress">
+            <button type="submit" class="govuk-button" >
                 Confirm details
             </button>
         </form>

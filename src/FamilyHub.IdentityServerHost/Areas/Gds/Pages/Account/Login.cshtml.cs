@@ -192,7 +192,7 @@ public class LoginModel : PageModel
 
     private JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ?? string.Empty));
         if (!int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes))
         {
             tokenValidityInMinutes = 30;
