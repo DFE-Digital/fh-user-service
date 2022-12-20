@@ -194,7 +194,7 @@ public class InviteUserToCreateAccountModel : PageModel
         
         var selected = string.Join(',', OrganisationCode ?? new List<string>());
 
-        var code = CreateAccountInvitationModel.GetTokenString(_configuration.GetValue<string>("InvitationKey"), Email, selected, RoleSelection, DateTime.UtcNow.AddDays(1));
+        var code = CreateAccountInvitationModel.GetTokenString(_configuration.GetValue<string>("InvitationKey"), Email, Email, selected, RoleSelection, DateTime.UtcNow.AddDays(1));
 
         var callbackUrl = Url.Page(
                     "/Account/RegisterUserFromInvitation",
