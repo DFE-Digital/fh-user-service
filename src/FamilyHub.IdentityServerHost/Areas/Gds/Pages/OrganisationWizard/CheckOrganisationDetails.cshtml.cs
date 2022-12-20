@@ -23,7 +23,7 @@ public class CheckOrganisationDetailsModel : PageModel
         _redisCacheService.StoreCurrentPageName("/OrganisationWizard/CheckOrganisationDetails");
         NewOrganisation = _redisCacheService.RetrieveNewOrganisation();
     }
-    public void OnPost() 
+    public IActionResult OnPost() 
     {
         //OpenReferralOrganisationWithServicesDto openReferralOrganisationWithServicesDto = new(Organisation.Id, organisationType, Organisation.Name, Organisation.Description, Organisation.Logo, Organisation.Url, Organisation.Url, new List<OpenReferralServiceDto>());
         //openReferralOrganisationWithServicesDto.AdministractiveDistrictCode = AuthorityCode;
@@ -37,5 +37,10 @@ public class CheckOrganisationDetailsModel : PageModel
         //    openReferralOrganisationWithServicesDto.Id = Guid.NewGuid().ToString();
         //    await _apiService.CreateOrganisation(openReferralOrganisationWithServicesDto);
         //}
+
+        return RedirectToPage("/OrganisationWizard/Confirmation", new
+        {
+            area = "Gds"
+        });
     }
 }

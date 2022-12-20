@@ -1,3 +1,4 @@
+using FamilyHub.IdentityServerHost.Helpers;
 using FamilyHub.IdentityServerHost.Models;
 using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +24,7 @@ public class CheckAccountDetailsModel : PageModel
         LastPage = _redisCacheService.RetrieveLastPageName();
         _redisCacheService.StoreCurrentPageName("/Invitation/CheckAccountDetails");
         NewUser = _redisCacheService.RetrieveNewUser();
-        GetRoleFullName();
-
+        RoleName = RoleHelper.GetRoleFullName(NewUser?.Role ?? string.Empty);
     }
 
     public IActionResult OnPost()
@@ -52,24 +52,5 @@ public class CheckAccountDetailsModel : PageModel
         {
             area = "Gds"
         });
-    }
-
-    private void GetRoleFullName()
-    {
-        switch(NewUser?.Role)
-        {
-            case "DfEAdmin":
-                RoleName = "Department for Education administrator";
-                break;
-            case "LAAdmin":
-                RoleName = "Local authority administrator";
-                break;
-            case "VCSAdmin":
-                RoleName = "Voluntary community organisation administrator";
-                break;
-            case "Professional":
-                RoleName = "Department for Education administrator";
-                break;
-        }             
     }
 }
