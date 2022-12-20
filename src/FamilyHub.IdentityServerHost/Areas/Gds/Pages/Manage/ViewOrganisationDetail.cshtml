@@ -1,0 +1,58 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.ViewOrganisationDetailModel
+@{
+}
+
+<a asp-page="/Manage/ViewOrganisations" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">Home-Start</h1>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form method="post">
+                <input asp-for="@Model.OrganisationId" type="hidden" />
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <input class="govuk-input" id="Name" name="Name" value="@Model.OpenReferralOrganisationDto.Name" type="text" autocomplete="off">
+                        
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Local authority
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.LocalAuthority
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Type
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.OpenReferralOrganisationDto.OrganisationType.Description
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                    </dd>
+                </div>
+            </dl>
+                <button class="govuk-button">Save details</button>
+            </form>
+            <p><a asp-page="/Manage/ViewOrganisations">Back to manage local authorities and voluntary community organisations</a></p>
+        </div>
+    </div>
+</main>

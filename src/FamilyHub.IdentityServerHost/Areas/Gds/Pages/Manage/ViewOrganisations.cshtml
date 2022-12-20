@@ -1,0 +1,80 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.ViewOrganisationsModel
+@{
+}
+
+<a asp-page="/Manage/Homepage" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-grid-column-one-third">
+            <div class="filters-component panel-component__content" id="filters-component" data-controller="filters">
+                <div class="filters-component__heading">
+                    <h2 class="govuk-heading-m">Filter </h2>
+                </div>
+                <form method="post">
+                    <div class="filters-component__groups">
+                        <div class="filters-component__groups__group">
+                            <div>
+                                <div class="govuk-form-group">
+                                    <fieldset class="govuk-fieldset">
+                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><span class="govuk-fieldset__heading">Type</span></legend>
+                                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                            @foreach (var org in Model.OrganisationTypes)
+                                            {
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="@org.Name" name="SelectedOrganisationTypes" type="checkbox" value="@org.Name" @(Model.SelectedOrganisationTypes != null && Model.SelectedOrganisationTypes.Any(x => x == org.Name) ? "checked" : "")>
+                                                    <label class="govuk-label govuk-checkboxes__label" for="@org.Name">
+                                                        @org.Description
+                                                    </label>
+                                                </div>
+                                            
+                                            }
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                        Apply filters
+                    </button>
+                </form>
+                <p><a asp-page-handler="ClearFilter">Clear filters</a></p>
+            </div>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+            <table class="govuk-table" data-module="moj-sortable-table">
+
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+
+                        <th scope="col" class="govuk-table__header" aria-sort="ascending" style="width: 40%">Name</th>
+
+                        <th scope="col" class="govuk-table__header" aria-sort="none" style="width: 40%">Type</th>
+
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 20%"></th>
+
+                    </tr>
+                </thead>
+
+                <tbody class="govuk-table__body">
+
+                    @foreach (var org in @Model.PagedOrganisations.Items)
+                    {
+                        <tr class="govuk-table__row">
+
+                            <td class="govuk-table__cell">@org.Name</td>
+                            <td class="govuk-table__cell">@org.OrganisationType.Description</td>
+
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a class="govuk-!-margin-right-1" asp-page="/Manage/ViewOrganisationDetail" asp-route-id="@org.Id">View</a>
+                                @*<a class="govuk-!-margin-right-0" href="remove-home-start">Delete</a>*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
