@@ -1,15 +1,15 @@
 ﻿@page
-@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.WhatIsUsernameModel
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation.WhatIsUsernameModel
 @{
 }
 
 @if(@Model?.NewUser?.Role == "DfEAdmin")
 {
-    <a asp-page="/Manage/TypeOfUser" class="govuk-back-link" data-testid="back-button">Back</a>
+    <a asp-page="/Invitation/TypeOfUser" class="govuk-back-link" data-testid="back-button">Back</a>
 }
 else
 {
-    <a asp-page="/Manage/WhichOrganisation" class="govuk-back-link" data-testid="back-button">Back</a>
+    <a asp-page="/Invitation/WhichOrganisation" class="govuk-back-link" data-testid="back-button">Back</a>
 }
 
 

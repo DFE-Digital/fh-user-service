@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Build.Framework;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation;
 
 public class WhatIsUsernameModel : PageModel
 {
@@ -23,7 +23,7 @@ public class WhatIsUsernameModel : PageModel
 
     public void OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("/Manage/WhatIsUsername");
+        _redisCacheService.StoreCurrentPageName("/Invitation/WhatIsUsername");
         NewUser = _redisCacheService.RetrieveNewUser();
         if (NewUser != null)
         {
@@ -45,7 +45,7 @@ public class WhatIsUsernameModel : PageModel
         }
         _redisCacheService.StoreNewUser(NewUser);
 
-        return RedirectToPage("/Manage/WhatIsEmailAddress", new
+        return RedirectToPage("/Invitation/WhatIsEmailAddress", new
         {
             area = "Gds",
         });

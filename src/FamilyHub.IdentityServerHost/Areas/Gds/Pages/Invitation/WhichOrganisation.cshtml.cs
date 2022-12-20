@@ -3,14 +3,13 @@ using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Persistence.Repository;
 using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Build.Framework;
 using System.Security.Claims;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation;
 
 public class WhichOrganisationModel : PageModel
 {
@@ -38,7 +37,7 @@ public class WhichOrganisationModel : PageModel
     }
     public async Task OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("/Manage/WhichOrganisation");
+        _redisCacheService.StoreCurrentPageName("/Invitation/WhichOrganisation");
         NewUser = _redisCacheService.RetrieveNewUser();
         if(NewUser != null) 
         {
@@ -71,7 +70,7 @@ public class WhichOrganisationModel : PageModel
         }
         _redisCacheService.StoreNewUser(NewUser);
 
-        return RedirectToPage("/Manage/WhatIsUsername", new
+        return RedirectToPage("/Invitation/WhatIsUsername", new
         {
             area = "Gds",
         });

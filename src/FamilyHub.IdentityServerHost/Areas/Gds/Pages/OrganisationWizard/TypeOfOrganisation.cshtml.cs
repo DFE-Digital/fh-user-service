@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.OrganisationWizard;
 
 public class TypeOfOrganisationModel : PageModel
 {
@@ -28,7 +28,7 @@ public class TypeOfOrganisationModel : PageModel
     public async Task OnGet()
     {
         await InitPage();
-        _redisCacheService.StoreCurrentPageName("/Manage/TypeOfOrganisation");
+        _redisCacheService.StoreCurrentPageName("/OrganisationWizard/TypeOfOrganisation");
         NewOrganisation = _redisCacheService.RetrieveNewOrganisation();
         if (NewOrganisation != null)
         {
@@ -55,7 +55,7 @@ public class TypeOfOrganisationModel : PageModel
         
         _redisCacheService.StoreNewOrganisation(NewOrganisation);
 
-        return RedirectToPage("/Manage/WhichLAOrAdminDistrict", new
+        return RedirectToPage("/OrganisationWizard/WhichLAOrAdminDistrict", new
         {
             area = "Gds",
         });

@@ -6,7 +6,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.OrganisationWizard;
 
 public class CheckOrganisationDetailsModel : PageModel
 {
@@ -20,7 +20,7 @@ public class CheckOrganisationDetailsModel : PageModel
 
     public void OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("/Manage/CheckOrganisationDetails");
+        _redisCacheService.StoreCurrentPageName("/OrganisationWizard/CheckOrganisationDetails");
         NewOrganisation = _redisCacheService.RetrieveNewOrganisation();
     }
     public void OnPost() 

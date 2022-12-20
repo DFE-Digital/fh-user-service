@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Build.Framework;
 using NuGet.Configuration;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.OrganisationWizard;
 
 public class OrganisationNameModel : PageModel
 {
@@ -27,7 +27,7 @@ public class OrganisationNameModel : PageModel
 
     public void OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("/Manage/OrganisationName");
+        _redisCacheService.StoreCurrentPageName("/OrganisationWizard/OrganisationName");
         NewOrganisation = _redisCacheService.RetrieveNewOrganisation();
         if (NewOrganisation != null)
         {
@@ -53,7 +53,7 @@ public class OrganisationNameModel : PageModel
         }
         _redisCacheService.StoreNewOrganisation(NewOrganisation);
 
-        return RedirectToPage("/Manage/CheckOrganisationDetails", new
+        return RedirectToPage("/OrganisationWizard/CheckOrganisationDetails", new
         {
             area = "Gds",
         });

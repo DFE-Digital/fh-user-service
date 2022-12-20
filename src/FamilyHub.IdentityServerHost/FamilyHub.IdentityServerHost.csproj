@@ -29,6 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Gds\Pages\Invitation\" />
+    <Folder Include="Areas\Gds\Pages\OrganisationWizard\" />
     <Folder Include="Persistence\Data\" />
   </ItemGroup>
 

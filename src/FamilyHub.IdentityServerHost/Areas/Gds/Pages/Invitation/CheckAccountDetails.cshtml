@@ -1,5 +1,5 @@
 ﻿@page
-@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.CheckAccountDetailsModel
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation.CheckAccountDetailsModel
 @{
 }
 
@@ -22,7 +22,7 @@
                     @Model.RoleName
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/TypeOfUser">
+                    <a class="govuk-link" asp-page="/Invitation/TypeOfUser">
                         Change<span class="govuk-visually-hidden"> user type</span>
                     </a>
                 </dd>
@@ -37,7 +37,7 @@
                         @Model?.NewUser?.OrganisationName
                     </dd>
                     <dd class="govuk-summary-list__actions">
-                        <a class="govuk-link" asp-page="/Manage/WhichOrganisation" >
+                        <a class="govuk-link" asp-page="/Invitation/WhichOrganisation">
                             Change<span class="govuk-visually-hidden"> name</span>
                         </a>
                     </dd>
@@ -109,7 +109,7 @@
                     @Model?.NewUser?.FullName
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/WhatIsUsername" >
+                    <a class="govuk-link" asp-page="/Invitation/WhatIsUsername">
                         Change<span class="govuk-visually-hidden"> name</span>
                     </a>
                 </dd>
@@ -122,7 +122,7 @@
                     @Model?.NewUser?.EmailAddress
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/WhatIsEmailAddress" >
+                    <a class="govuk-link" asp-page="/Invitation/WhatIsEmailAddress">
                         Change<span class="govuk-visually-hidden"> email address</span>
                     </a>
                 </dd>

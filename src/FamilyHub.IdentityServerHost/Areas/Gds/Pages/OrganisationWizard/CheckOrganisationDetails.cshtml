@@ -1,9 +1,9 @@
 ﻿@page
-@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.CheckOrganisationDetailsModel
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.OrganisationWizard.CheckOrganisationDetailsModel
 @{
 }
 
-<a asp-page="/Manage/OrganisationName" class="govuk-back-link" data-testid="back-button">Back</a>
+<a asp-page="/OrganisationWizard/OrganisationName" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
     <fieldset class="govuk-fieldset">
@@ -21,7 +21,7 @@
                     @Model?.NewOrganisation?.OrganisationTypeDto?.Description
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/TypeOfOrganisation">
+                    <a class="govuk-link" asp-page="/OrganisationWizard/TypeOfOrganisation">
                         Change<span class="govuk-visually-hidden"> organisation type</span>
                     </a>
                 </dd>
@@ -34,7 +34,7 @@
                     @Model?.NewOrganisation?.ParentName
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/WhichLAOrAdminDistrict">
+                    <a class="govuk-link" asp-page="/OrganisationWizard/WhichLAOrAdminDistrict">
                         Change<span class="govuk-visually-hidden"> parent</span>
                     </a>
                 </dd>
@@ -47,7 +47,7 @@
                     @Model?.NewOrganisation?.Name
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" asp-page="/Manage/OrganisationName">
+                    <a class="govuk-link" asp-page="/OrganisationWizard/OrganisationName">
                         Change<span class="govuk-visually-hidden"> name</span>
                     </a>
                 </dd>

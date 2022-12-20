@@ -2,9 +2,8 @@ using FamilyHub.IdentityServerHost.Models;
 using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Encodings.Web;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation;
 
 public class CheckAccountDetailsModel : PageModel
 {
@@ -22,7 +21,7 @@ public class CheckAccountDetailsModel : PageModel
     public void OnGet()
     {
         LastPage = _redisCacheService.RetrieveLastPageName();
-        _redisCacheService.StoreCurrentPageName("/Manage/CheckAccountDetails");
+        _redisCacheService.StoreCurrentPageName("/Invitation/CheckAccountDetails");
         NewUser = _redisCacheService.RetrieveNewUser();
         GetRoleFullName();
 
@@ -49,7 +48,7 @@ public class CheckAccountDetailsModel : PageModel
         _redisCacheService.ResetLastPageName();
         _redisCacheService.ResetNewUser();
 
-        return RedirectToPage("/Manage/Confirmation", new
+        return RedirectToPage("/Invitation/Confirmation", new
         {
             area = "Gds"
         });

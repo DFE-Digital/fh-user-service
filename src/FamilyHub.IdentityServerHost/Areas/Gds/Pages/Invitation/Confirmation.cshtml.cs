@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation
 {
     public class ConfirmationModel : PageModel
     {

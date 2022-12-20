@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Build.Framework;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation;
 
 public class TypeOfUserModel : PageModel
 {
@@ -27,7 +27,7 @@ public class TypeOfUserModel : PageModel
     }
     public void OnGet()
     {
-        _redisCacheService.StoreCurrentPageName("/Manage/TypeOfUser");
+        _redisCacheService.StoreCurrentPageName("/Invitation/TypeOfUser");
         NewUser = _redisCacheService.RetrieveNewUser();
         if (NewUser != null) 
         {
@@ -61,13 +61,13 @@ public class TypeOfUserModel : PageModel
 
         if (RoleSelection != "DfEAdmin")
         {
-            return RedirectToPage("/Manage/WhichOrganisation", new
+            return RedirectToPage("/Invitation/WhichOrganisation", new
             {
                 area = "Gds",
             });
         }
 
-        return RedirectToPage("/Manage/WhatIsUsername", new
+        return RedirectToPage("/Invitation/WhatIsUsername", new
         {
             area = "Gds",
         });

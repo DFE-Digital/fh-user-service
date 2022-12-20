@@ -1,5 +1,5 @@
 ﻿@page
-@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.TypeOfUserModel
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation.TypeOfUserModel
 @{
 }
 
@@ -55,7 +55,7 @@
                             <div class="govuk-radios__item">
                                 <input asp-for="RoleSelection" class="govuk-radios__input" type="radio" value="@Model.AvailableRoles.First(x => x.Name == "Professional").Name" checked="@(string.IsNullOrEmpty(Model.RoleSelection) && Model.RoleSelection == "Professional")" />
                                 <label class="govuk-label govuk-radios__label" for="userType">
-                                    Voluntary community organisation administrator
+                                    Proffesional
                                 </label>
                             </div>
                         }
