@@ -1,0 +1,40 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.OrganisationWizard.OrganisationNameModel
+@{
+}
+
+<a asp-page="/OrganisationWizard/WhichLAOrAdminDistrict" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+
+     <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <span class="govuk-fieldset__heading">
+                @Model.HeadingLabelQuestion
+        </span>
+      </legend>
+      <form method="post" data-validate="my-form-validation">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-visually-hidden" for="orgName">@Model.NameLabel</label>
+        <input class="govuk-input" id="Name" name="Name" value="@Model.Name" type="text" autocomplete="off">
+        <span asp-validation-for="Name" class="text-danger"></span>
+      </div>
+
+      <button class="govuk-button">
+        Continue
+      </button>
+    </form>
+      <script type="application/json" id="my-form-validation">
+
+        {
+          "orgName": {
+            "presence": {
+              "message": "^Enter a name"
+            }
+          }
+        }
+      </script>
+    </fieldset>
+
+</main>

@@ -9,7 +9,7 @@ public interface IApiService
 {
     Task<List<OrganisationTypeDto>> GetListOrganisationTypes();
     Task<List<OpenReferralOrganisationDto>> GetListOpenReferralOrganisations();
-    Task<OpenReferralOrganisationDto> GetOpenReferralOrganisationById(string id);
+    Task<OpenReferralOrganisationWithServicesDto> GetOpenReferralOrganisationById(string id);
     Task<string> GetAdminCodeByOrganisationId(string organisationId);
     Task<string> CreateOrganisation(OpenReferralOrganisationWithServicesDto organisation);
     Task<string> UpdateOrganisation(OpenReferralOrganisationWithServicesDto organisation);
@@ -57,7 +57,7 @@ public class ApiService : IApiService
 
     }
 
-    public async Task<OpenReferralOrganisationDto> GetOpenReferralOrganisationById(string id)
+    public async Task<OpenReferralOrganisationWithServicesDto> GetOpenReferralOrganisationById(string id)
     {
         var request = new HttpRequestMessage
         {
@@ -70,7 +70,7 @@ public class ApiService : IApiService
 
         response.EnsureSuccessStatusCode();
 
-        return await JsonSerializer.DeserializeAsync<OpenReferralOrganisationDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new OpenReferralOrganisationDto();
+        return await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new OpenReferralOrganisationWithServicesDto();
 
     }
 

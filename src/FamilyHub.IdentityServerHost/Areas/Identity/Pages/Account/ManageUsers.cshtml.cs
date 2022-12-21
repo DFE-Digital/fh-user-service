@@ -67,7 +67,7 @@ public class ManageUsersModel : PageModel
             page = 1;
         }
 
-        var totalPages = _userManager.Users.Count() / PageSize;
+        var totalPages = (int)Math.Ceiling((float)_userManager.Users.Count() / (float)PageSize);
         if (page < 1)
         {
             PageNumber = 1;    

@@ -1,0 +1,36 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation.WhatIsEmailAddressModel
+@{
+}
+
+<a asp-page="/Invitation/WhatIsUsername"  class="govuk-back-link" data-testid="back-button">Back</a>
+
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+<fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <span class="govuk-fieldset__heading">
+          What is the user's email address?
+        </span>
+      </legend>
+        <div class="govuk-hint govuk-!-margin-top-2">
+          They will use this to log in to their account.
+        </div>
+
+      <form method="post" novalidate data-validate='my-form-validation'>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="govuk-form-group">
+          <input class="govuk-input" id="EmailAddress" name="EmailAddress" type="email" value="@Model.EmailAddress" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
+          <span asp-validation-for="EmailAddress" class="text-danger"></span>
+        </div>
+
+            <button type="submit" class="govuk-button">
+        Continue
+      </button>
+    </form>
+    </fieldset>
+</main>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}

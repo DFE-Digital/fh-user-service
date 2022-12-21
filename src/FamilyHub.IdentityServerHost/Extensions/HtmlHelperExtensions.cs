@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectoryAdminUi.Ui.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
@@ -22,6 +23,13 @@ public static class HtmlHelperExtensions
         var requestRoot = html.ViewContext.HttpContext.Request.GetRequestUrlRoot();
         var requestPath = html.ViewContext.HttpContext.Request.Path;
         var hashedAccountId = html.ViewContext.RouteData.Values["accountId"]?.ToString();
+        ConfigurationManager? configurationManager = html.ViewContext.HttpContext.RequestServices.GetService(typeof(IConfiguration)) as ConfigurationManager;
+
+        bool UseOriginalCode = true;
+        if (configurationManager != null)
+        {
+            UseOriginalCode = configurationManager.GetValue<bool>("UseOriginalCode");
+        }
 
         string userName = string.Empty;
         UserManager<ApplicationIdentityUser>? userManager = html.ViewContext.HttpContext.RequestServices.GetService(typeof(UserManager<ApplicationIdentityUser>)) as UserManager<ApplicationIdentityUser>;
@@ -44,7 +52,8 @@ public static class HtmlHelperExtensions
             HashedAccountId = html.ViewContext.RouteData.Values["accountId"]?.ToString() ?? string.Empty,
         },
         userName,
-        isAbleToCallAuthenticatedServices
+        isAbleToCallAuthenticatedServices,
+        UseOriginalCode
         );
 
         headerModel.SelectMenu("Finance");

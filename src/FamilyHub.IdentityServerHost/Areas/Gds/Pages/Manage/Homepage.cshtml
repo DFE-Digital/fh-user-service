@@ -1,0 +1,47 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.HomepageModel
+@{
+}
+
+@inject UserManager<FamilyHub.IdentityServerHost.Models.Entities.ApplicationIdentityUser> UserManager
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+
+<h1 class="govuk-heading-xl govuk-!-margin-bottom-1">@UserManager.GetUserName(User)</h1>
+<h1 class="govuk-caption-l">Department for Education</h1>
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-section-break--l">
+<div class="cards">
+    
+    @if (User.IsInRole("DfEAdmin") || User.IsInRole("LAAdmin") || User.IsInRole("VCSAdmin"))
+    {
+        <div class="card">
+            <h2 class="govuk-heading-m"><a asp-page="/Invitation/TypeOfUser">Create user accounts</a></h2>
+            <p class="govuk-body-s">Create different types of user accounts.</p>
+        </div>
+        <div class="card">
+            <h2 class="govuk-heading-m"><a asp-page="/Manage/ViewUsers">Manage user accounts</a></h2>
+            <p class="govuk-body-s">View, change or delete user accounts.</p>
+        </div>     
+    }
+
+    @if (User.IsInRole("DfEAdmin") || User.IsInRole("LAAdmin"))
+    {
+         <div class="card">
+            <h2 class="govuk-heading-m"><a asp-page="/OrganisationWizard/TypeOfOrganisation">Add a local authority or voluntary community organisation</a></h2>
+            <p class="govuk-body-s"> Add a local authority or organisation before creating their user accounts.</p>
+        </div>
+
+        <div class="card">
+            <h2 class="govuk-heading-m"><a asp-page="/Manage/ViewOrganisations" >Manage local authorities and voluntary community organisations</a></h2>
+            <p class="govuk-body-s">View, change or delete local authorities and organisations.</p>
+        </div>
+    }
+        
+    
+</div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

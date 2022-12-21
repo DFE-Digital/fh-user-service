@@ -9,19 +9,43 @@ namespace FamilyHub.IdentityServerHost.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly ITokenService _tokenService;
 
-        public IndexModel(ITokenService tokenService, ILogger<IndexModel> logger)
+        public bool UseOriginalCode { get; set; } = false;
+
+        public IndexModel(IConfiguration configuration, ITokenService tokenService, ILogger<IndexModel> logger)
         {
             _logger = logger;
             _tokenService = tokenService;
+            UseOriginalCode = configuration.GetValue<bool>("UseOriginalCode");
         }
 
         public IActionResult OnGet()
         {
-            if (string.IsNullOrEmpty(_tokenService.GetToken()))
+            if (UseOriginalCode)
             {
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
+                if (string.IsNullOrEmpty(_tokenService.GetToken()))
+                {
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(_tokenService.GetToken()))
+                {
+                    return RedirectToPage("/Manage/Homepage", new { area = "Gds" });
+                }
             }
             
+            
+            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            if (string.IsNullOrEmpty(_tokenService.GetToken()))
+            {
+                return RedirectToPage("/Account/Login", new { area = "Gds" });
+            }
+
             return Page();
         }
     }

@@ -1,0 +1,81 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage.ViewUserModel
+@{
+}
+
+<a asp-page="/Manage/ViewUsers" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <form method="post">
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Name
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.DisplayApplicationUser.UserName
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Email
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.DisplayApplicationUser.Email
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Works for
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.DisplayApplicationUser.OrganisationName
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Account type
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.DisplayApplicationUser.FullRoleNames
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Reset Password
+            </dt>
+            <dd class="govuk-summary-list__value">
+                    <a class="govuk-!-margin-right-1" asp-page-handler="ResetPassword" asp-route-emailAddress="@Model.DisplayApplicationUser.Email">Reset Password</a>
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Delete Account
+            </dt>
+            <dd class="govuk-summary-list__value">
+                    
+                    <a class="govuk-!-margin-right-1" asp-page-handler="DeleteUser" asp-route-emailAddress="@Model.DisplayApplicationUser.Email">Delete Account</a>
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+
+    </dl>
+    
+        <button class="govuk-button">Save details</button>
+    </form>
+    <p><a asp-page="/Manage/ViewUsers">Back to manage user accounts</a></p>
+
+</main>

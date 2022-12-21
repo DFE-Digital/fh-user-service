@@ -1,0 +1,139 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation.CheckAccountDetailsModel
+@{
+}
+
+<a asp-page="@Model.LastPage" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <span class="govuk-fieldset__heading">
+                Check account details
+            </span>
+        </legend>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9" id="replace-commas">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Account type
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.RoleName
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" asp-page="/Invitation/TypeOfUser">
+                        Change<span class="govuk-visually-hidden"> user type</span>
+                    </a>
+                </dd>
+            </div>
+            @if(Model?.NewUser?.Role != "DfEAdmin")
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Organisation
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model?.NewUser?.OrganisationName
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" asp-page="/Invitation/WhichOrganisation">
+                            Change<span class="govuk-visually-hidden"> name</span>
+                        </a>
+                    </dd>
+                </div>
+            }
+            @*{% if data['userType'] === 'Local authority administrator' %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Local authority
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{data['localAuthority'] | first }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#" onclick="showAlert();">
+                        Change<span class="govuk-visually-hidden"> LA</span>
+                    </a>
+                </dd>
+            </div>
+            {% endif %}
+            {% if data['userType'] === 'Voluntary and community sector administrator' %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Local authority
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{data['vcsLocalAuthority'] | first }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#" onclick="showAlert();">
+                        Change<span class="govuk-visually-hidden"> LA</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Voluntary and community organisation
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{data['vcsOrg'] | first }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#" onclick="showAlert();">
+                        Change<span class="govuk-visually-hidden"> VCS org</span>
+                    </a>
+                </dd>
+            </div>
+            {% endif %}
+            {% if data['userType'] === 'Professional' %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Local authority
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{data['localAuthority'] | first }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="#" onclick="showAlert();">
+                        Change<span class="govuk-visually-hidden"> LA</span>
+                    </a>
+                </dd>
+            </div>
+            {% endif %}*@
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model?.NewUser?.FullName
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" asp-page="/Invitation/WhatIsUsername">
+                        Change<span class="govuk-visually-hidden"> name</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model?.NewUser?.EmailAddress
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" asp-page="/Invitation/WhatIsEmailAddress">
+                        Change<span class="govuk-visually-hidden"> email address</span>
+                    </a>
+                </dd>
+            </div>
+        </dl>
+
+        <form method="post">
+
+            <button type="submit" class="govuk-button" >
+                Confirm details
+            </button>
+        </form>
+    </fieldset>
+</main>

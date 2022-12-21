@@ -1,0 +1,65 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.OrganisationWizard.CheckOrganisationDetailsModel
+@{
+}
+
+<a asp-page="/OrganisationWizard/OrganisationName" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <span class="govuk-fieldset__heading">
+                Check details
+            </span>
+        </legend>
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9" id="replace-commas">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    What you added
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model?.NewOrganisation?.OrganisationTypeDto?.Description
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" asp-page="/OrganisationWizard/TypeOfOrganisation">
+                        Change<span class="govuk-visually-hidden"> organisation type</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Local Authority
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model?.NewOrganisation?.ParentName
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" asp-page="/OrganisationWizard/WhichLAOrAdminDistrict">
+                        Change<span class="govuk-visually-hidden"> parent</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model?.NewOrganisation?.Name
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" asp-page="/OrganisationWizard/OrganisationName">
+                        Change<span class="govuk-visually-hidden"> name</span>
+                    </a>
+                </dd>
+            </div>
+
+        </dl>
+
+        <form method="post">
+
+            <button class="govuk-button">
+                Confirm details
+            </button>
+        </form>
+    </fieldset>
+</main>

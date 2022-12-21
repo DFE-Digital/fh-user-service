@@ -1,13 +1,11 @@
-using FamilyHub.IdentityServerHost.Extensions;
 using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Persistence.Repository;
 using FamilyHub.IdentityServerHost.Services;
+using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.AzureAppServices;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,17 +38,17 @@ switch (useDbType)
 
     case "UseSqlLite":
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(builder.Configuration.GetConnectionString("UserServiceConnection"),
+                options.UseSqlite(builder.Configuration.GetConnectionString("UserServiceConnection") ?? string.Empty,
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
         break;
     case "UseSqlServerDatabase":
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("UserServiceConnection"),
+                options.UseSqlServer(builder.Configuration.GetConnectionString("UserServiceConnection") ?? string.Empty,
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
         break;
     case "UsePostgresDatabase":
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("UserServiceConnection"),
+                options.UseNpgsql(builder.Configuration.GetConnectionString("UserServiceConnection") ?? string.Empty,
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
         break;
 
@@ -66,6 +64,8 @@ builder.Services.AddTransient<ApplicationDbContextInitialiser>();
 builder.Services.AddTransient<IOrganisationRepository, OrganisationRepository>();
 builder.Services.AddTransient<AuthenticationDelegatingHandler>();
 builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<IRedisCache, RedisCache>();
+builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
 
 
 bool isEmailEnabled = builder.Configuration.GetValue<bool>("EmailSetting:IsEmailEnabled");

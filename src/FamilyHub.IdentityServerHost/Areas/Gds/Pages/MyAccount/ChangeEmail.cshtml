@@ -1,0 +1,28 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.MyAccount.ChangeEmailModel
+@{
+}
+
+<a asp-page="/MyAccount/ViewPersonalDetails" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <span class="govuk-fieldset__heading">
+          Change your email address
+        </span>
+      </legend>
+      <form method="post" data-validate='my-form-validation'>
+        <partial name="_StatusMessage" model="Model.StatusMessage" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="govuk-form-group"> <label for="new-email" class="govuk-label">Email</label>
+         <input type="email" asp-for="Input.NewEmail" class="govuk-input govuk-!-width-one-half" autocomplete="new-email" value="@Model.Email">
+          <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+        </div>
+        <button type="submit" asp-page-handler="ChangeEmail" class="govuk-button">
+          Continue
+        </button>
+      </form>
+        <p><a asp-page="/MyAccount/ViewPersonalDetails">Cancel</a></p>
+    </fieldset>
+</main>
