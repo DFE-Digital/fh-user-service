@@ -1,0 +1,35 @@
+﻿@page
+@model FamilyHub.IdentityServerHost.Areas.Gds.Pages.MyAccount.ViewPersonalDetailsModel
+@{
+}
+
+<a asp-page="/Manage/Homepage" class="govuk-back-link" data-testid="back-button">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+        <h1 class="govuk-fieldset__heading">
+          Manage your account
+        </h1>
+      </legend>
+      <table class="govuk-table govuk-!-margin-top-2">
+        <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Name</th>
+          <td class="govuk-table__cell">James Smith</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><a asp-page="/MyAccount/ChangeName">Change</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Email address</th>
+          <td class="govuk-table__cell">abc@123.com</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><a asp-page="/MyAccount/ChangeEmail">Change</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Password</th>
+          <td class="govuk-table__cell">Password changed on 2 December 2022</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><a asp-page="/MyAccount/ChangePassword">Change</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </fieldset>
+</main>

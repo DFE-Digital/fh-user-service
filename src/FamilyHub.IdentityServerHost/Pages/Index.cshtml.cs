@@ -9,17 +9,18 @@ namespace FamilyHub.IdentityServerHost.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly ITokenService _tokenService;
 
-        public bool UseOrginalCode { get; set; } = false;
+        public bool UseOriginalCode { get; set; } = false;
 
-        public IndexModel(ITokenService tokenService, ILogger<IndexModel> logger)
+        public IndexModel(IConfiguration configuration, ITokenService tokenService, ILogger<IndexModel> logger)
         {
             _logger = logger;
             _tokenService = tokenService;
+            UseOriginalCode = configuration.GetValue<bool>("UseOriginalCode");
         }
 
         public IActionResult OnGet()
         {
-            if (UseOrginalCode)
+            if (UseOriginalCode)
             {
                 if (string.IsNullOrEmpty(_tokenService.GetToken()))
                 {

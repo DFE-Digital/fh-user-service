@@ -27,6 +27,7 @@ public class HeaderViewModel : IHeaderViewModel
         IUserContext userContext,
         string userName,
         bool isAbleToCallAuthenticatedServices,
+        bool useOriginalCode = false,
         ILinkCollection? linkCollection = null,
         ILinkHelper? linkHelper = null,
         IUrlHelper? urlHelper = null,
@@ -52,7 +53,8 @@ public class HeaderViewModel : IHeaderViewModel
         if (isAbleToCallAuthenticatedServices)
         {
             AddOrUpdateLink(new HomeLink("/Index", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-            AddOrUpdateLink(new SignOutLink(userName, "/Identity/Account/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+            AddOrUpdateLink(new MyAccountLink("/Gds/MyAccount/ViewPersonalDetails", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+            AddOrUpdateLink(new SignOutLink(useOriginalCode, userName, "/Identity/Account/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
         }
         else
         {

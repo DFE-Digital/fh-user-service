@@ -41,10 +41,10 @@ public class CheckOrganisationDetailsModel : PageModel
             }
             else
             {
-                OpenReferralOrganisationWithServicesDto parentLA = await _apiService.GetOpenReferralOrganisationById(NewOrganisation.OrganisationId);
+                OpenReferralOrganisationWithServicesDto parentLA = await _apiService.GetOpenReferralOrganisationById(NewOrganisation?.OrganisationId ?? string.Empty);
                 if (parentLA != null) 
                 {
-                    OpenReferralOrganisationWithServicesDto openReferralOrganisationWithServicesDto = new(Guid.NewGuid().ToString(), NewOrganisation?.OrganisationTypeDto, NewOrganisation.Name, NewOrganisation.Name, default!, default!, default!, new List<OpenReferralServiceDto>());
+                    OpenReferralOrganisationWithServicesDto openReferralOrganisationWithServicesDto = new(Guid.NewGuid().ToString(), NewOrganisation?.OrganisationTypeDto, NewOrganisation?.Name, NewOrganisation.Name, default!, default!, default!, new List<OpenReferralServiceDto>());
                     openReferralOrganisationWithServicesDto.AdministractiveDistrictCode = parentLA.AdministractiveDistrictCode;
                     await _apiService.CreateOrganisation(openReferralOrganisationWithServicesDto);
                     return RedirectToPage("/OrganisationWizard/Confirmation", new
