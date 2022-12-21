@@ -1,7 +1,9 @@
 using FamilyHub.IdentityServerHost.Models;
+using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Services;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -44,7 +46,7 @@ public class CheckOrganisationDetailsModel : PageModel
                 OpenReferralOrganisationWithServicesDto parentLA = await _apiService.GetOpenReferralOrganisationById(NewOrganisation?.OrganisationId ?? string.Empty);
                 if (parentLA != null) 
                 {
-                    OpenReferralOrganisationWithServicesDto openReferralOrganisationWithServicesDto = new(Guid.NewGuid().ToString(), NewOrganisation?.OrganisationTypeDto, NewOrganisation?.Name, NewOrganisation.Name, default!, default!, default!, new List<OpenReferralServiceDto>());
+                    OpenReferralOrganisationWithServicesDto openReferralOrganisationWithServicesDto = new(Guid.NewGuid().ToString(), NewOrganisation?.OrganisationTypeDto ?? new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector"), NewOrganisation?.Name, NewOrganisation?.Name ?? string.Empty, default!, default!, default!, new List<OpenReferralServiceDto>());
                     openReferralOrganisationWithServicesDto.AdministractiveDistrictCode = parentLA.AdministractiveDistrictCode;
                     await _apiService.CreateOrganisation(openReferralOrganisationWithServicesDto);
                     return RedirectToPage("/OrganisationWizard/Confirmation", new

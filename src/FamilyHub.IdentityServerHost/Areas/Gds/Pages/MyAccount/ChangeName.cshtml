@@ -6,33 +6,25 @@
 <a asp-page="/MyAccount/ViewPersonalDetails" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <partial name="_StatusMessage" model="Model.StatusMessage" />
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 class="govuk-fieldset__heading">
+        <span class="govuk-fieldset__heading">
           Change your name
-        </h1>
+        </span>
       </legend>
-      <form method="post" novalidate data-validate='my-form-validation'>
-
+      <form method="post" data-validate='my-form-validation'>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="govuk-form-group"> <label for="new-name" class="govuk-label">Name</label>
-          <input type="text" name="new-name" id="new-name" class="govuk-input govuk-!-width-one-half" autocomplete="new-name" value="John Smith">
+                <input type="text" asp-for="Username" class="govuk-input govuk-!-width-one-half" autocomplete="Username" value="@Model.Username">
+                <span asp-validation-for="Username" class="text-danger"></span>
         </div>
 
         <button class="govuk-button">
           Continue
         </button>
       </form>
-      <p><a href="view-personal-details">Cancel</a></p>
-      <script type="application/json" id="my-form-validation">
-
-        {
-          "new-name": {
-            "presence": {
-              "message": "^Enter a name"
-            }
-          }
-        }
-      </script>
+      <p><a asp-page="/MyAccount/ViewPersonalDetails">Cancel</a></p>
     </fieldset>
 </main>
 

@@ -45,6 +45,10 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
                 return NotFound($"Unable to load user with ID '{userId}'.");
             }
 
+            int index = code.LastIndexOf("'");
+            if (index >= 0)
+                code = code.Substring(0, index);
+
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ChangeEmailAsync(user, email, code);
             if (!result.Succeeded)
