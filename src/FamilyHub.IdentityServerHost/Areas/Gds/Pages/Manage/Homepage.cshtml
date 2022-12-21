@@ -12,22 +12,33 @@
 
 <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--l">
 <div class="cards">
-    <div class="card">
-        <h2 class="govuk-heading-m"><a asp-page="/Invitation/TypeOfUser">Create user accounts</a></h2>
-        <p class="govuk-body-s">Create different types of user accounts.</p>
-    </div>
-    <div class="card">
-        <h2 class="govuk-heading-m"><a asp-page="/Manage/ViewUsers">Manage user accounts</a></h2>
-        <p class="govuk-body-s">View, change or delete user accounts.</p>
-    </div>
-    <div class="card">
+    
+    @if (User.IsInRole("DfEAdmin") || User.IsInRole("LAAdmin") || User.IsInRole("VCSAdmin"))
+    {
+        <div class="card">
+            <h2 class="govuk-heading-m"><a asp-page="/Invitation/TypeOfUser">Create user accounts</a></h2>
+            <p class="govuk-body-s">Create different types of user accounts.</p>
+        </div>
+        <div class="card">
+            <h2 class="govuk-heading-m"><a asp-page="/Manage/ViewUsers">Manage user accounts</a></h2>
+            <p class="govuk-body-s">View, change or delete user accounts.</p>
+        </div>     
+    }
+
+    @if (User.IsInRole("DfEAdmin") || User.IsInRole("LAAdmin"))
+    {
+         <div class="card">
             <h2 class="govuk-heading-m"><a asp-page="/OrganisationWizard/TypeOfOrganisation">Add a local authority or voluntary community organisation</a></h2>
-        <p class="govuk-body-s"> Add a local authority or organisation before creating their user accounts.</p>
-    </div>
-    <div class="card">
+            <p class="govuk-body-s"> Add a local authority or organisation before creating their user accounts.</p>
+        </div>
+
+        <div class="card">
             <h2 class="govuk-heading-m"><a asp-page="/Manage/ViewOrganisations" >Manage local authorities and voluntary community organisations</a></h2>
-        <p class="govuk-body-s">View, change or delete local authorities and organisations.</p>
-    </div>
+            <p class="govuk-body-s">View, change or delete local authorities and organisations.</p>
+        </div>
+    }
+        
+    
 </div>
 </main>
 

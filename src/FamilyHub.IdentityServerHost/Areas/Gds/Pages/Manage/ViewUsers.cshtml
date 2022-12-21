@@ -19,27 +19,34 @@
                             <fieldset class="govuk-fieldset">
                                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><span class="govuk-fieldset__heading">Account type</span></legend>
                                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                    <div class="govuk-checkboxes__item">
+                                    @if(User.IsInRole("DfEAdmin"))
+                                    {
+                                     <div class="govuk-checkboxes__item">
                                         <input class="govuk-checkboxes__input" id="DfEAdmin" name="DfEAdmin" type="checkbox" value="DfEAdmin" checked="@(!string.IsNullOrEmpty(Model.DfEAdmin))">
-                                        <label class="govuk-label govuk-checkboxes__label" for="user">
+                                        <label class="govuk-label govuk-checkboxes__label" for="DfEAdmin">
                                             Department for Education administrator
                                         </label>
-                                    </div>
-                                    <div class="govuk-checkboxes__item">
+                                    </div>  
+                                    }
+                                    @if (User.IsInRole("DfEAdmin") || User.IsInRole("LAAdmin"))
+                                    {
+                                     <div class="govuk-checkboxes__item">
                                         <input class="govuk-checkboxes__input" id="LAAdmin" name="LAAdmin" type="checkbox" value="LAAdmin" checked="@(!string.IsNullOrEmpty(Model.LAAdmin))">
-                                        <label class="govuk-label govuk-checkboxes__label" for="user-2">
+                                        <label class="govuk-label govuk-checkboxes__label" for="LAAdmin">
                                             Local authority administrator
                                         </label>
-                                    </div>
+                                    </div>       
+                                    }
+                                     
                                     <div class="govuk-checkboxes__item">
                                         <input class="govuk-checkboxes__input" id="VCSAdmin" name="VCSAdmin" type="checkbox" value="VCSAdmin" checked="@(!string.IsNullOrEmpty(Model.VCSAdmin))">
-                                        <label class="govuk-label govuk-checkboxes__label" for="user-3">
+                                        <label class="govuk-label govuk-checkboxes__label" for="VCSAdmin">
                                             Voluntary community organisation administrator
                                         </label>
                                     </div>
                                     <div class="govuk-checkboxes__item">
                                         <input class="govuk-checkboxes__input" id="Professional" name="Professional" type="checkbox" value="Professional" checked="@(!string.IsNullOrEmpty(Model.Professional))">
-                                        <label class="govuk-label govuk-checkboxes__label" for="user-4">
+                                            <label class="govuk-label govuk-checkboxes__label" for="Professional">
                                             Professional
                                         </label>
                                     </div>

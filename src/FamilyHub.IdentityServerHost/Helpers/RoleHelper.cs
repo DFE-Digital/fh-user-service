@@ -18,7 +18,7 @@ public static class RoleHelper
                 return "Voluntary community organisation administrator";
                 
             case "Professional":
-                return "Department for Education administrator";
+                return "Professional";
               
         }
 

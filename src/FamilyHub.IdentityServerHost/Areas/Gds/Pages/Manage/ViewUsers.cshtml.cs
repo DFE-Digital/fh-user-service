@@ -10,6 +10,7 @@ using FamilyHubs.SharedKernel;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using System.Security.Claims;
 using FamilyHub.IdentityServerHost.Helpers;
+using System.Linq;
 
 namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
 
@@ -148,9 +149,18 @@ public class ViewUsersModel : PageModel
         {
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
             var currentUser = applicationUsers.FirstOrDefault(x => x.Email == userEmail);
+            List<string> forbiddenRoles = new List<string>()
+            {
+                "DfEAdmin"
+            };
             if (currentUser != null)
             {
-                applicationUsers = applicationUsers.Where(x => x.Roles.Contains("DfEAdmin") == false).ToList();
+                if (User.IsInRole("VCSAdmin"))
+                {
+                    forbiddenRoles.Add("LAAdmin");
+                    
+                }
+                applicationUsers = applicationUsers.Where(x => forbiddenRoles.Contains(x.Roles) == false).ToList();
                 applicationUsers = applicationUsers.Where(x => x.OrganisationId == currentUser.OrganisationId || string.IsNullOrEmpty(x.OrganisationId)).ToList();
                 var organisation = _organisationRepository.GetUserOrganisationIdByUserId(currentUser.Id);
                 if (!string.IsNullOrEmpty(organisation))
