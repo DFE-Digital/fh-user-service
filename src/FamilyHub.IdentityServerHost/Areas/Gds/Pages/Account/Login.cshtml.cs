@@ -77,7 +77,7 @@ public class LoginModel : PageModel
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         public string Email { get; set; } = default!;
 
         /// <summary>

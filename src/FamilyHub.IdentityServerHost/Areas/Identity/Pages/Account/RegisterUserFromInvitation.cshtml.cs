@@ -71,6 +71,8 @@ public class RegisterUserFromInvitationModel : PageModel
 
         public string OrganisationId { get; set; } = default!;
         public string Role { get; set; } = default!;
+
+        public string Username { get; set; } = default!;
     }
 
     public RegisterUserFromInvitationModel(
@@ -120,11 +122,8 @@ public class RegisterUserFromInvitationModel : PageModel
             Input.Email = invitationModel.EmailAddress;
             Input.OrganisationId = invitationModel.OrganisationId;
             Input.Role = invitationModel.Role;
+            Input.Username = invitationModel.Username;
 
-            //Input = new InputModel
-            //{
-            //    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
-            //};
             return Page();
         }
     }
@@ -139,49 +138,110 @@ public class RegisterUserFromInvitationModel : PageModel
                 ModelState.AddModelError("", "You are not associated with an organisation.");
         }
 
+        
+
         ModelState.Remove("Input.Role");
 
-        if (ModelState.IsValid)
+        if (_configuration.GetValue<bool>("UseOriginalCode"))
         {
-            var user = CreateUser();
-
-            await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-            var result = await _userManager.CreateAsync(user, Input.Password);
-
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
-                _logger.LogInformation("User created a new account with password.");
+                var user = CreateUser();
 
-                await AddUserOrganisation(user);
-                await AddUserRoles(user);
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                var result = await _userManager.CreateAsync(user, Input.Password);
 
-                var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Account/ConfirmEmail",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = userId, code = code, returnUrl = "/Account/RegisterUserFromInvitation" },
-                    protocol: Request.Scheme);
-
-                ArgumentNullException.ThrowIfNull(callbackUrl, nameof(callbackUrl));
-
-                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                if (result.Succeeded)
                 {
-                    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = "/Account/RegisterUserFromInvitation" });
+                    _logger.LogInformation("User created a new account with password.");
+
+                    await AddUserOrganisation(user);
+                    await AddUserRoles(user);
+
+                    var userId = await _userManager.GetUserIdAsync(user);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = Url.Page(
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = userId, code = code, returnUrl = "/Account/RegisterUserFromInvitation" },
+                        protocol: Request.Scheme);
+
+                    ArgumentNullException.ThrowIfNull(callbackUrl, nameof(callbackUrl));
+
+                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    {
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = "/Account/RegisterUserFromInvitation" });
+                    }
+                    else
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect("~/");
+                    }
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+        }
+        else
+        {
+            ModelState.Remove("Input.Username");
+
+            if (ModelState.IsValid)
+            {
+                var user = CreateUser();
+
+                if (!string.IsNullOrEmpty(Input.Username))
+                {
+                    Input.Username = Input.Username.Replace(" ", "_");
+                    await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 }
                 else
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect("~/");
+                    Input.Username = Input.Email;
+                    await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                }
+
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                var result = await _userManager.CreateAsync(user, Input.Password);
+
+                if (result.Succeeded)
+                {
+
+                    _logger.LogInformation("User created a new account with password.");
+
+                    await AddUserOrganisation(user);
+                    await AddUserRoles(user);
+
+                    var userId = await _userManager.GetUserIdAsync(user);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    result = await _userManager.ConfirmEmailAsync(user, code);
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+
+                        return Page();
+                    }
+
+                    return LocalRedirect($"~/Gds/Invitation/ConfirmUserAccountSetUp?username={Input.Username}");
+
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
         }
+
+        
         
         // If we got this far, something failed, redisplay form
         return Page();
