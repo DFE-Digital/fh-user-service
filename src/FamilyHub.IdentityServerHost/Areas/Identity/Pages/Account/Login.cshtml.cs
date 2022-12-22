@@ -96,8 +96,21 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; } = default!;
         }
 
-        public async Task OnGetAsync(string? returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string? returnUrl = null)
         {
+            if (!_configuration.GetValue<bool>("UseOriginalCode"))
+            {
+                if (returnUrl == "/Identity/Account/Logout")
+                {
+                    returnUrl = "/Gds/Manage/Homepage";
+                }
+                return RedirectToPage("/Account/Login", new
+                {
+                    area = "Gds",
+                    returnUrl
+                });   
+            }
+                
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
@@ -111,6 +124,10 @@ namespace FamilyHub.IdentityServerHost.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
+
+            return Page();
+
+            
         }
 
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)

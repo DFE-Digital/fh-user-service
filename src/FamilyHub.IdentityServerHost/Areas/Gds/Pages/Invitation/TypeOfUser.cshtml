@@ -8,16 +8,42 @@
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
     <fieldset class="govuk-fieldset">
+
+        @if (Model.ValidationValid == false)
+        {
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        <li>
+                            <a href="#" data-testid="enter-account-type-error">You must select an account type</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+        
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <span class="govuk-fieldset__heading">
                 Which account do you want to create?
             </span>
         </legend>
+        
         <form method="post" novalidate data-validate='my-form-validation'>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <span asp-validation-for="RoleSelection" class="text-danger"></span>
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
+
+                    @{
+                        if (Model.ValidationValid == false)
+                        {
+                            <p class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> Select the type of account you want to create
+                            </p>
+                        }
+                    }
+
                     <div class="govuk-radios" data-module="govuk-radios">
                         @if(Model.AvailableRoles.Any(x => x.Name == "DfEAdmin"))
                         {
@@ -71,7 +97,3 @@
     </fieldset>
 
 </main>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

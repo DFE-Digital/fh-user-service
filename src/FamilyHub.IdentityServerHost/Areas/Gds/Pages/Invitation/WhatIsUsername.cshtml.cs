@@ -2,7 +2,7 @@ using FamilyHub.IdentityServerHost.Models;
 using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Build.Framework;
+using System.ComponentModel.DataAnnotations;
 
 namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation;
 
@@ -12,9 +12,12 @@ public class WhatIsUsernameModel : PageModel
 
     public NewUser? NewUser { get; set; } = default!;
 
-    [Required]
     [BindProperty]
+    [Required(ErrorMessage = "Enter name")]
+
     public string FullName { get; set; } = default!;
+
+    public bool ValidationValid { get; set; } = true;
 
     public WhatIsUsernameModel(IRedisCacheService redisCacheService)
     {
@@ -33,6 +36,7 @@ public class WhatIsUsernameModel : PageModel
 
     public IActionResult OnPost()
     {
+        ValidationValid = ModelState.IsValid;
         if (!ModelState.IsValid) 
         {
             return Page();
