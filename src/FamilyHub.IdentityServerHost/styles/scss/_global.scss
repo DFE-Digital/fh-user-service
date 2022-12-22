@@ -1,4 +1,5 @@
 ﻿//Patterns
+@import "patterns/global";
 @import "patterns/cards";
 
 //Components
@@ -11,3 +12,7 @@
 @import "pages/InPersonWhere";
 @import "pages/DeliveryType";
 @import "pages/WhatLanguage";
+
+//Overrides
+@import "dfe-overrides/header";
+@import "dfe-overrides/main";
