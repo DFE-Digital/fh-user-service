@@ -20,6 +20,8 @@ public class TypeOfUserModel : PageModel
     [Required]
     public string RoleSelection { get; set; } = default!;
 
+    public bool ValidationValid { get; set; } = true;
+
     public TypeOfUserModel(IRedisCacheService redisCacheService, RoleManager<IdentityRole> roleManager)
     { 
         _roleManager = roleManager;
@@ -42,8 +44,10 @@ public class TypeOfUserModel : PageModel
         
         if (string.IsNullOrEmpty(RoleSelection))
         {
-            ModelState.AddModelError("RoleSelection", "Please select a role");
+            ModelState.AddModelError("", "Select the account you want to create");
         }
+
+        ValidationValid = ModelState.IsValid;
 
         if (!ModelState.IsValid) 
         {
