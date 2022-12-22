@@ -16,9 +16,12 @@ namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation
             _redisCacheService = redisCacheService;
         }
 
-        [Required]
+        [Required(ErrorMessage = "Enter an email address")]
         [BindProperty]
+        [EmailAddress]
         public string EmailAddress { get; set; } = default!;
+
+        public bool ValidationValid { get; set; } = true;
         public void OnGet()
         {
             _redisCacheService.StoreCurrentPageName("/Invitation/WhatIsEmailAddress");
@@ -31,6 +34,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation
 
         public IActionResult OnPost()
         {
+            ValidationValid = ModelState.IsValid;
             if (!ModelState.IsValid)
             {
                 return Page();

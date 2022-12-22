@@ -7,6 +7,21 @@
 
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    @if (Model?.ValidationValid == false)
+    {
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#" data-testid="enter-email-address-error">Enter an email address</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
 <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
         <span class="govuk-fieldset__heading">
@@ -18,10 +33,15 @@
         </div>
 
       <form method="post" novalidate data-validate='my-form-validation'>
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (Model?.ValidationValid == false)
+        {
+            <p class="govuk-error-message">
+                <span class="govuk-visually-hidden" data-testid="email-enter-validation">Error:</span>
+                <span asp-validation-for="@Model.EmailAddress"></span>
+            </p>
+        }
         <div class="govuk-form-group">
-          <input class="govuk-input" id="EmailAddress" name="EmailAddress" type="email" value="@Model.EmailAddress" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
-          <span asp-validation-for="EmailAddress" class="text-danger"></span>
+          <input class="govuk-input" id="EmailAddress" name="EmailAddress" type="email" value="@Model?.EmailAddress" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
         </div>
 
             <button type="submit" class="govuk-button">
@@ -30,7 +50,3 @@
     </form>
     </fieldset>
 </main>
-
-@section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-}
