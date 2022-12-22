@@ -12,15 +12,18 @@ public class DeleteUserModel : PageModel
     private readonly UserManager<ApplicationIdentityUser> _userManager;
     private readonly ILogger<DeleteUserModel> _logger;
     private readonly IOrganisationRepository _organisationRepository;
+    private readonly IConfiguration _configuration;
 
     public DeleteUserModel(
         UserManager<ApplicationIdentityUser> userManager,
         IOrganisationRepository organisationRepository,
-        ILogger<DeleteUserModel> logger)
+        ILogger<DeleteUserModel> logger,
+        IConfiguration configuration)
     {
         _userManager = userManager;
         _logger = logger;
         _organisationRepository = organisationRepository;
+        _configuration = configuration;
     }
 
     /// <summary>
@@ -88,6 +91,14 @@ public class DeleteUserModel : PageModel
 
         _logger.LogInformation($"User with ID '{UserId}' deleted by Admin.");
 
-        return Redirect("~/Identity/Account/ManageUsers");
+        if(_configuration.GetValue<bool>("UseOriginalCode"))
+        {
+            return Redirect("~/Identity/Account/ManageUsers");
+        }
+        else
+        {
+            return Redirect("~/Gds/Manage/ViewUsers");
+        }
+        
     }
 }

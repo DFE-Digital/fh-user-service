@@ -58,7 +58,14 @@ public class HeaderViewModel : IHeaderViewModel
         }
         else
         {
-            AddOrUpdateLink(new SignInLink("/Identity/Account/Login", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+            if (useOriginalCode)
+            {
+                AddOrUpdateLink(new SignInLink("/Identity/Account/Login", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+            }
+            else
+            {
+                AddOrUpdateLink(new SignInLink("/Gds/Account/Login", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+            } 
         }
     }
 
