@@ -18,10 +18,10 @@ public class HomepageModel : PageModel
         _userManager = userManager;
         _applicationDbContext = applicationDbContext;
     }
-    public async Task OnGet()
+    public void OnGet()
     {
         UserName = _userManager.GetUserName(User);
-        string? userName = _applicationDbContext.GetFullNameAsync(UserName);
+        string? userName = _applicationDbContext.GetFullName(UserName);
         if (userName != null) 
         { 
             UserName = userName;

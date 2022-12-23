@@ -15,7 +15,7 @@ public interface IApplicationDbContext
 
     int SaveChanges();
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
-    string? GetFullNameAsync(string email);
+    string? GetFullName(string email);
     Task<bool> SetFullNameAsync(string email, string fullName);
 }
 
@@ -32,7 +32,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationIdentityUser>, 
 
     public DbSet<UserOrganisation> UserOrganisations => Set<UserOrganisation>();
 
-    public string? GetFullNameAsync(string email)
+    public string? GetFullName(string email)
     {
         var user = Users.FirstOrDefault(x => x.Email == email);
         if (user != null)
