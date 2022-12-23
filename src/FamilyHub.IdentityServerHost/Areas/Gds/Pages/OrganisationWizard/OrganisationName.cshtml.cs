@@ -20,6 +20,8 @@ public class OrganisationNameModel : PageModel
     public string HeadingLabelQuestion { get; set; } = default!;
     public string NameLabel { get; set; } = default!;
 
+    public bool ValidationValid { get; set; } = true;
+
     public OrganisationNameModel(IRedisCacheService redisCacheService)
     {
         _redisCacheService = redisCacheService;
@@ -40,6 +42,7 @@ public class OrganisationNameModel : PageModel
 
     public IActionResult OnPost()
     {
+        ValidationValid = ModelState.IsValid;
         if (!ModelState.IsValid) 
         {
             InitPage();

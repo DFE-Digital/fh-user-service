@@ -6,7 +6,24 @@
 <a asp-page="/MyAccount/ViewPersonalDetails" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
-    <partial name="_StatusMessage" model="Model.StatusMessage" />
+
+    @if (Model?.ValidationValid == false)
+    {
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#" data-testid="enter-organisation-name-error">Enter a name</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+
+    <partial name="_StatusMessage" model="Model?.StatusMessage" />
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
         <span class="govuk-fieldset__heading">
@@ -14,10 +31,15 @@
         </span>
       </legend>
       <form method="post" data-validate='my-form-validation'>
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+       @if (Model?.ValidationValid == false)
+        {
+            <p class="govuk-error-message">
+                <span class="govuk-visually-hidden" data-testid="name-enter-validation">Error:</span>
+                    <span asp-validation-for="Username"></span>
+            </p>
+        }
         <div class="govuk-form-group"> <label for="new-name" class="govuk-label">Name</label>
-                <input type="text" asp-for="Username" class="govuk-input govuk-!-width-one-half" autocomplete="Username" value="@Model.Username">
-                <span asp-validation-for="Username" class="text-danger"></span>
+            <input type="text" asp-for="Username" class="govuk-input govuk-!-width-one-half" autocomplete="Username" value="@Model?.Username">    
         </div>
 
         <button class="govuk-button">
@@ -28,7 +50,4 @@
     </fieldset>
 </main>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
 

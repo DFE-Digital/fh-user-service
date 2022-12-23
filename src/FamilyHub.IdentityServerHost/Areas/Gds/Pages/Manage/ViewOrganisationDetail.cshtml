@@ -6,23 +6,49 @@
 <a asp-page="/Manage/ViewOrganisations" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-xl">Home-Start</h1>
         </div>
     </div>
 
+    @if (Model?.ValidationValid == false)
+    {
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#" data-testid="enter-organisation-name-error">Enter a name</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <form method="post">
-                <input asp-for="@Model.OrganisationId" type="hidden" />
+                <input asp-for="OrganisationId" type="hidden" />
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Name
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        <input class="govuk-input" id="Name" name="Name" value="@Model.OpenReferralOrganisationDto.Name" type="text" autocomplete="off">
+
+                        @if (Model?.ValidationValid == false)
+                        {
+                            <p class="govuk-error-message">
+                                <span class="govuk-visually-hidden" data-testid="name-enter-validation">Error:</span>
+                                <span asp-validation-for="@Model.Name"></span>
+                            </p>
+                        }
+
+                        <input class="govuk-input" id="Name" name="Name" value="@Model?.OpenReferralOrganisationDto.Name" type="text" autocomplete="off">
                         
                     </dd>
                     <dd class="govuk-summary-list__actions">
@@ -34,7 +60,7 @@
                         Local authority
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @Model.LocalAuthority
+                        @Model?.LocalAuthority
                     </dd>
                     <dd class="govuk-summary-list__actions">
                     </dd>
@@ -44,7 +70,7 @@
                         Type
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @Model.OpenReferralOrganisationDto.OrganisationType.Description
+                        @Model?.OpenReferralOrganisationDto.OrganisationType.Description
                     </dd>
                     <dd class="govuk-summary-list__actions">
                     </dd>
