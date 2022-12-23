@@ -223,7 +223,6 @@ public class RegisterUserFromInvitationModel : PageModel
                     }
 
                     await _applicationDbContext.SetFullNameAsync(Input.Email, Input.Fullname);
-                    //var name = _applicationDbContext.GetFullNameAsync(Input.Email);
 
                     return LocalRedirect($"~/Gds/Invitation/ConfirmUserAccountSetUp?username={Input.Email}");
 
