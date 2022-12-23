@@ -1,4 +1,5 @@
 using FamilyHub.IdentityServerHost.Models.Entities;
+using FamilyHub.IdentityServerHost.Persistence.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,7 @@ namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.MyAccount;
 public class ChangeNameModel : PageModel
 {
     private readonly UserManager<ApplicationIdentityUser> _userManager;
+    private readonly IApplicationDbContext _applicationDbContext;
 
     [BindProperty]
     [Required]
@@ -17,9 +19,10 @@ public class ChangeNameModel : PageModel
 
     public string StatusMessage { get; set; } = default!;
 
-    public ChangeNameModel(UserManager<ApplicationIdentityUser> userManager)
+    public ChangeNameModel(UserManager<ApplicationIdentityUser> userManager, IApplicationDbContext applicationDbContext)
     {
         _userManager = userManager;
+        _applicationDbContext = applicationDbContext;
     }
     public async Task<IActionResult> OnGet()
     {
@@ -29,7 +32,12 @@ public class ChangeNameModel : PageModel
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 
-        Username = await _userManager.GetUserNameAsync(user);
+        Username = _applicationDbContext.GetFullName(user.Email) ?? string.Empty;
+        if (string.IsNullOrEmpty(Username)) 
+        {
+            Username = await _userManager.GetUserNameAsync(user);
+        }   
+            
 
         return Page();
     }
@@ -47,8 +55,7 @@ public class ChangeNameModel : PageModel
             return Page();
         }
 
-        var setUserNameResult = await _userManager.SetUserNameAsync(user, Username);
-        if (!setUserNameResult.Succeeded)
+        if (!await _applicationDbContext.SetFullNameAsync(user.Email, Username))
         {
             StatusMessage = "Error changing user name.";
             return Page();

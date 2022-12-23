@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Data;
+using System.Drawing;
 using System.Security.Claims;
 using System.Threading;
 
@@ -137,8 +138,8 @@ public class ApplicationDbContextInitialiser
 
         if (_isProduction)
         {
-            await AddUser(_userManager, "Ben.MACINNES@education.gov.uk", "8qBoCcDrvP$", "DfEAdmin", "www.warmhandover.gov.uk");
-            await AddUser(_userManager, "emily.chomitzki@digital.education.gov.uk", "gXT8lp9qOW$", "DfEAdmin", "www.warmhandover.gov.uk");
+            await AddUser(_userManager, "Ben Machinnes", "Ben.MACINNES@education.gov.uk", "8qBoCcDrvP$", "DfEAdmin", "www.warmhandover.gov.uk");
+            await AddUser(_userManager, "Emily Chomitzki@digital", "emily.chomitzki@digital.education.gov.uk", "gXT8lp9qOW$", "DfEAdmin", "www.warmhandover.gov.uk");
         }
         else
         {
@@ -148,18 +149,18 @@ public class ApplicationDbContextInitialiser
             string[] Websites = new string[] { "https://www.bristol.gov.uk/", "https://www.lancashire.gov.uk/", "https://www.redbridge.gov.uk/", "https://www.salford.gov.uk/", "https://www.suffolk.gov.uk/", "https://www.towerhamlets.gov.uk/Home.aspx" };
 
             //await AddUser(_userManager, "martin.belton@digital.education.gov.uk", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
-            await AddUser(_userManager, "DfEAdmin", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
+            await AddUser(_userManager, "DfEAdmin", "DfEAdmin@email.com", "Pass123$", "DfEAdmin", "www.warmhandover.gov.uk");
             for (int i = 0; i < LAAdmins.Length; i++)
             {
-                await AddUser(_userManager, LAAdmins[i], "Pass123$", "LAAdmin", Websites[i]);
+                await AddUser(_userManager, LAAdmins[i], $"{LAAdmins[i]}@email.com", "Pass123$", "LAAdmin", Websites[i]);
             }
             for (int i = 0; i < SvcAdmins.Length; i++)
             {
-                await AddUser(_userManager, SvcAdmins[i], "Pass123$", "VCSAdmin", Websites[i]);
+                await AddUser(_userManager, SvcAdmins[i],$"{SvcAdmins[i]}@email.com", "Pass123$", "VCSAdmin", Websites[i]);
             }
             for (int i = 0; i < Pro.Length; i++)
             {
-                await AddUser(_userManager, Pro[i], "Pass123$", "Professional", Websites[i]);
+                await AddUser(_userManager, Pro[i], $"{Pro[i]}@email.com", "Pass123$", "Professional", Websites[i]);
             }
         }
     }
@@ -178,29 +179,17 @@ public class ApplicationDbContextInitialiser
         }
     }
 
-    private async Task AddUser(UserManager<ApplicationIdentityUser> userMgr, string person, string password, string role, string website)
+    private async Task AddUser(UserManager<ApplicationIdentityUser> userMgr, string person, string email, string password, string role, string website)
     {
         var user = userMgr.FindByNameAsync(person).Result;
         if (user == null)
         {
             user = CreateUser();
             user.EmailConfirmed = true;
-            string email = string.Empty;
-
-            if (!_isProduction)
-            {
-                email = $"{person}@email.com";       
-            }
-            
+           
             if (person.Contains("@"))
                 email = person;
 
-            //user = new IdentityUser
-            //{
-            //    UserName = person,
-            //    Email = $"{person}@email.com",
-            //    EmailConfirmed = true,
-            //};
             await _userStore.SetUserNameAsync(user, email, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
             var result = userMgr.CreateAsync(user, password).Result;
@@ -263,6 +252,11 @@ public class ApplicationDbContextInitialiser
                         await _context.SaveChangesAsync();
                     }
                 }
+            }
+
+            if (!await _context.SetFullNameAsync(email, person))
+            {
+                throw new ArgumentException("Failed to set Full Name");
             }
 
             _logger.LogDebug($"{person} created");

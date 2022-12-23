@@ -1,12 +1,30 @@
+using FamilyHub.IdentityServerHost.Models.Entities;
+using FamilyHub.IdentityServerHost.Persistence.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage
+namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
+
+public class HomepageModel : PageModel
 {
-    public class HomepageModel : PageModel
+    private readonly UserManager<ApplicationIdentityUser> _userManager;
+    private readonly IApplicationDbContext _applicationDbContext;
+
+    public string UserName { get; set; } = default!;
+
+    public HomepageModel(UserManager<ApplicationIdentityUser> userManager, IApplicationDbContext applicationDbContext)
     {
-        public void OnGet()
-        {
-        }
+        _userManager = userManager;
+        _applicationDbContext = applicationDbContext;
+    }
+    public void OnGet()
+    {
+        UserName = _userManager.GetUserName(User);
+        string? userName = _applicationDbContext.GetFullName(UserName);
+        if (userName != null) 
+        { 
+            UserName = userName;
+        } 
     }
 }

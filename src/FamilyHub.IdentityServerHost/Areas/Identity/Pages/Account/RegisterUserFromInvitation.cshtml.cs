@@ -28,6 +28,7 @@ public class RegisterUserFromInvitationModel : PageModel
     private readonly IOrganisationRepository _organisationRepository;
     private readonly IApiService _apiService;
     private readonly IMemoryCache _memoryCache;
+    private readonly IApplicationDbContext _applicationDbContext;
 
 
     public bool LinkHasExpired = false;
@@ -72,7 +73,7 @@ public class RegisterUserFromInvitationModel : PageModel
         public string OrganisationId { get; set; } = default!;
         public string Role { get; set; } = default!;
 
-        public string Username { get; set; } = default!;
+        public string Fullname { get; set; } = default!;
     }
 
     public RegisterUserFromInvitationModel(
@@ -85,7 +86,8 @@ public class RegisterUserFromInvitationModel : PageModel
             RoleManager<IdentityRole> roleManager,
             IOrganisationRepository organisationRepository,
             IApiService apiService,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            IApplicationDbContext applicationDbContext)
     {
         _configuration = configuration;
         _userManager = userManager;
@@ -98,6 +100,7 @@ public class RegisterUserFromInvitationModel : PageModel
         _organisationRepository = organisationRepository;
         _apiService = apiService;
         _memoryCache = memoryCache;
+        _applicationDbContext = applicationDbContext;
     }
     public IActionResult OnGet(string? code = null)
     {
@@ -122,7 +125,7 @@ public class RegisterUserFromInvitationModel : PageModel
             Input.Email = invitationModel.EmailAddress;
             Input.OrganisationId = invitationModel.OrganisationId;
             Input.Role = invitationModel.Role;
-            Input.Username = invitationModel.Username;
+            Input.Fullname = invitationModel.Username;
 
             return Page();
         }
@@ -193,18 +196,7 @@ public class RegisterUserFromInvitationModel : PageModel
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
-                if (!string.IsNullOrEmpty(Input.Username))
-                {
-                    Input.Username = Input.Username.Replace(" ", "_");
-                    await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
-                }
-                else
-                {
-                    Input.Username = Input.Email;
-                    await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                }
-
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -230,7 +222,9 @@ public class RegisterUserFromInvitationModel : PageModel
                         return Page();
                     }
 
-                    return LocalRedirect($"~/Gds/Invitation/ConfirmUserAccountSetUp?username={Input.Username}");
+                    await _applicationDbContext.SetFullNameAsync(Input.Email, Input.Fullname);
+
+                    return LocalRedirect($"~/Gds/Invitation/ConfirmUserAccountSetUp?username={Input.Email}");
 
                 }
 
