@@ -72,6 +72,8 @@ public class ChangeEmailModel : PageModel
 
     }
 
+    public bool ValidationValid { get; set; } = true;
+
     private async Task LoadAsync(ApplicationIdentityUser user)
     {
         var email = await _userManager.GetEmailAsync(user);
@@ -105,6 +107,7 @@ public class ChangeEmailModel : PageModel
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 
+        ValidationValid = ModelState.IsValid;
         if (!ModelState.IsValid)
         {
             await LoadAsync(user);
@@ -143,6 +146,7 @@ public class ChangeEmailModel : PageModel
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 
+        ValidationValid = ModelState.IsValid;
         if (!ModelState.IsValid)
         {
             await LoadAsync(user);

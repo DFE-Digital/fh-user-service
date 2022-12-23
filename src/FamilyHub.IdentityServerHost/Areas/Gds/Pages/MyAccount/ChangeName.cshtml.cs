@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Build.Framework;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.MyAccount;
 
@@ -18,6 +17,7 @@ public class ChangeNameModel : PageModel
     public string Username { get; set; } = default!;
 
     public string StatusMessage { get; set; } = default!;
+    public bool ValidationValid { get; set; } = true;
 
     public ChangeNameModel(UserManager<ApplicationIdentityUser> userManager, IApplicationDbContext applicationDbContext)
     {
@@ -50,6 +50,7 @@ public class ChangeNameModel : PageModel
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 
+        ValidationValid = ModelState.IsValid;
         if (!ModelState.IsValid) 
         {
             return Page();

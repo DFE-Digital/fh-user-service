@@ -15,6 +15,7 @@ public class ViewOrganisationDetailModel : PageModel
     [BindProperty]
     public string? Name { get; set; } = default!;
     public string? LocalAuthority { get; set; } = default!;
+    public bool ValidationValid { get; set; } = true;
     public ViewOrganisationDetailModel(IApiService apiService)
     {
         _apiService = apiService;
@@ -27,8 +28,20 @@ public class ViewOrganisationDetailModel : PageModel
 
     public async Task OnPost()
     {
+        if(string.IsNullOrEmpty(Name)) 
+        {
+            ModelState.AddModelError("Name", "Enter a name");
+        }
+
+        ValidationValid = ModelState.IsValid;
+        if (!ModelState.IsValid)
+        {
+            await InitPage();
+            return;
+        }
+
         OpenReferralOrganisationDto = await _apiService.GetOpenReferralOrganisationById(OrganisationId);
-        if (OpenReferralOrganisationDto != null && !string.IsNullOrEmpty(Name))
+        if (OpenReferralOrganisationDto != null && !string.IsNullOrEmpty(Name) && string.Compare(Name, OpenReferralOrganisationDto.Name) != 0)
         {
             OpenReferralOrganisationDto.Name= Name;
             await _apiService.UpdateOrganisation(OpenReferralOrganisationDto);

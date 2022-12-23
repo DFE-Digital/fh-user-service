@@ -19,6 +19,8 @@ public class TypeOfOrganisationModel : PageModel
     [Required]
     public string OrganisationTypeSelection { get; set; } = default!;
 
+    public bool ValidationValid { get; set; } = true;
+
     public TypeOfOrganisationModel(IRedisCacheService redisCacheService, IApiService apiService)
     {
         _redisCacheService = redisCacheService;
@@ -39,6 +41,8 @@ public class TypeOfOrganisationModel : PageModel
     public async Task<IActionResult> OnPost()
     {
         await InitPage();
+
+        ValidationValid = ModelState.IsValid;
 
         if (!ModelState.IsValid)
         {

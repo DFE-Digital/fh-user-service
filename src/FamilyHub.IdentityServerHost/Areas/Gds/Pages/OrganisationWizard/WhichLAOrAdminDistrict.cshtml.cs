@@ -22,6 +22,8 @@ public class WhichLAOrAdminDistrictModel : PageModel
     [BindProperty]
     public string OrganisationCode { get; set; } = default!;
 
+    public bool ValidationValid { get; set; } = true;
+
     public WhichLAOrAdminDistrictModel(IRedisCacheService redisCacheService, IApiService apiService)
     {
         _redisCacheService = redisCacheService;
@@ -37,6 +39,8 @@ public class WhichLAOrAdminDistrictModel : PageModel
     public async Task<IActionResult> OnPost()
     {
         await InitPage();
+
+        ValidationValid = ModelState.IsValid;
 
         if (!ModelState.IsValid)
         {
@@ -82,8 +86,5 @@ public class WhichLAOrAdminDistrictModel : PageModel
         {
             OrganisationCode = NewOrganisation.OrganisationId;
         }
-         
-
-
     }
 }
