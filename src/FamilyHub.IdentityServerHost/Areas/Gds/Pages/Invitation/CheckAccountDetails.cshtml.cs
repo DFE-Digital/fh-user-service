@@ -1,6 +1,5 @@
 using FamilyHub.IdentityServerHost.Helpers;
 using FamilyHub.IdentityServerHost.Models;
-using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
