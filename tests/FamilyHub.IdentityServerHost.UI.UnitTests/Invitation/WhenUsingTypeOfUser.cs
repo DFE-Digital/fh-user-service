@@ -9,10 +9,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Moq;
-using NuGet.Configuration;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Text;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests.Invitation;
 
@@ -23,21 +21,12 @@ public class WhenUsingTypeOfUser
     public WhenUsingTypeOfUser()
     {
         Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
-        
-
-
         mockRedisCacheService.Setup(x => x.StoreCurrentPageName(It.IsAny<string>()));
         mockRedisCacheService.Setup(x => x.RetrieveNewUser()).Returns(new Models.NewUser());
 
         _mockRoleManager = MockHelpers.MockRoleManager<IdentityRole>();
         
-
-        
-
         _typeOfUserModel = new(mockRedisCacheService.Object, _mockRoleManager.Object);
-
-        
-
     }
 
     private void CreatePageContext(string role)
