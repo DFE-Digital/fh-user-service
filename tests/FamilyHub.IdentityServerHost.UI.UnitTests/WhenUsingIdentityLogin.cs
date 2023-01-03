@@ -13,15 +13,29 @@ using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests;
-public class WhenUsingLogin
+public class WhenUsingIdentityLogin
 {
     private LoginModel _loginModel;
     private Mock<IAuthenticationService> _authServiceMock;
     private Mock<SignInManager<ApplicationIdentityUser>> _signInManagerMock;
 
-    public WhenUsingLogin()
+    public WhenUsingIdentityLogin()
     {
-        Mock<IConfiguration> mockConfiguration = new();
+        //Mock<IConfiguration> mockConfiguration = new();
+
+        IEnumerable<KeyValuePair<string, string?>>? inMemorySettings = new List<KeyValuePair<string, string?>>()
+        {
+            new KeyValuePair<string, string?>("JWT:Secret", "JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xcvb"),
+            new KeyValuePair<string, string?>("JWT:TokenValidityInMinutes", "60"),
+            new KeyValuePair<string, string?>("JWT:ValidIssuer", "ValidIssuer"),
+            new KeyValuePair<string, string?>("JWT:ValidAudience", "ValidAudience"),
+            new KeyValuePair<string, string?>("UseOriginalCode", "false")
+        };
+
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
         Mock<IOrganisationRepository> mockOrganisationRepository = new();
         Mock<ITokenService> mockTokenService = new();
 
@@ -50,7 +64,7 @@ public class WhenUsingLogin
         _loginModel = new LoginModel(_signInManagerMock.Object, 
             mockLogger.Object, 
             userManagerMock.Object,
-            mockConfiguration.Object,
+            configuration,
             mockOrganisationRepository.Object,
             mockTokenService.Object
             );
@@ -68,11 +82,12 @@ public class WhenUsingLogin
 
         userManagerMock.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(new ApplicationIdentityUser() { UserName = "DfEAdmin@email.com", RefreshToken = "abcd", RefreshTokenExpiryTime = DateTime.Now.AddHours(1) });
         userManagerMock.Setup(x => x.GetRolesAsync(It.IsAny<ApplicationIdentityUser>())).ReturnsAsync(new List<string> { "DfEAdmin"});
-        mockConfiguration.Setup(x => x["JWT:Secret"]).Returns("JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xcvb");
-        mockConfiguration.Setup(x => x["JWT:TokenValidityInMinutes"]).Returns("60");
+        //mockConfiguration.Setup(x => x["UseOriginalCode"]).Returns("false");
+        //mockConfiguration.Setup(x => x["JWT:Secret"]).Returns("JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xcvb");
+        //mockConfiguration.Setup(x => x["JWT:TokenValidityInMinutes"]).Returns("60");
 
-        mockConfiguration.Setup(x => x["JWT:ValidIssuer"]).Returns("ValidIssuer");
-        mockConfiguration.Setup(x => x["JWT:ValidAudience"]).Returns("ValidAudience");
+        //mockConfiguration.Setup(x => x["JWT:ValidIssuer"]).Returns("ValidIssuer");
+        //mockConfiguration.Setup(x => x["JWT:ValidAudience"]).Returns("ValidAudience");
 
         mockTokenService.Setup(x => x.SetToken(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>()));
 
