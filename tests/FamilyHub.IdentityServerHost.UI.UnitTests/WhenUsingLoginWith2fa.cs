@@ -11,34 +11,21 @@ namespace FamilyHub.IdentityServerHost.UI.UnitTests;
 
 public class WhenUsingLoginWith2fa
 {
-    public class MySignInResult : Microsoft.AspNetCore.Identity.SignInResult
-    {
-        public void SetSucceeded(bool succeeded)
-        {
-            this.Succeeded = succeeded;
-        }
-
-        public void SetLockedOut(bool lockedout)
-        {
-            this.IsLockedOut = lockedout;
-        }
-    }
-
     private Mock<SignInManager<ApplicationIdentityUser>> _signInManagerMock;
     private Mock<UserManager<ApplicationIdentityUser>>? _userManagerMock;
     private LoginWith2faModel _loginWith2FaModel;
     public WhenUsingLoginWith2fa()
     {
-        var _userManagerMock = new Mock<UserManager<ApplicationIdentityUser>>(
-    /* IUserStore<TUser> store */Mock.Of<IUserStore<ApplicationIdentityUser>>(),
-    /* IOptions<IdentityOptions> optionsAccessor */null,
-    /* IPasswordHasher<TUser> passwordHasher */null,
-    /* IEnumerable<IUserValidator<TUser>> userValidators */null,
-    /* IEnumerable<IPasswordValidator<TUser>> passwordValidators */null,
-    /* ILookupNormalizer keyNormalizer */null,
-    /* IdentityErrorDescriber errors */null,
-    /* IServiceProvider services */null,
-    /* ILogger<UserManager<TUser>> logger */null);
+        _userManagerMock = new Mock<UserManager<ApplicationIdentityUser>>(
+                        /* IUserStore<TUser> store */Mock.Of<IUserStore<ApplicationIdentityUser>>(),
+                        /* IOptions<IdentityOptions> optionsAccessor */null,
+                        /* IPasswordHasher<TUser> passwordHasher */null,
+                        /* IEnumerable<IUserValidator<TUser>> userValidators */null,
+                        /* IEnumerable<IPasswordValidator<TUser>> passwordValidators */null,
+                        /* ILookupNormalizer keyNormalizer */null,
+                        /* IdentityErrorDescriber errors */null,
+                        /* IServiceProvider services */null,
+                        /* ILogger<UserManager<TUser>> logger */null);
 
         _signInManagerMock = new Mock<SignInManager<ApplicationIdentityUser>>(
             _userManagerMock.Object,

@@ -23,8 +23,8 @@ namespace FamilyHub.IdentityServerHost.UI.UnitTests.Invitation;
 
 public class WhenUsingWhichOrganisation
 {
-    private WhichOrganisationModel _whichOrganisationModel;
-    private Mock<RoleManager<IdentityRole>> _mockRoleManager;
+    private readonly WhichOrganisationModel _whichOrganisationModel;
+    private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
     public WhenUsingWhichOrganisation()
     {
         var userManagerMock = new Mock<UserManager<ApplicationIdentityUser>>(

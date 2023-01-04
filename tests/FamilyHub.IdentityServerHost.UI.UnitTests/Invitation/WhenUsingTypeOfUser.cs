@@ -16,8 +16,8 @@ namespace FamilyHub.IdentityServerHost.UI.UnitTests.Invitation;
 
 public class WhenUsingTypeOfUser
 {
-    private TypeOfUserModel _typeOfUserModel;
-    private Mock<RoleManager<IdentityRole>> _mockRoleManager;
+    private readonly TypeOfUserModel _typeOfUserModel;
+    private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
     public WhenUsingTypeOfUser()
     {
         Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();

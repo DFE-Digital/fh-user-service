@@ -15,9 +15,9 @@ using Moq;
 namespace FamilyHub.IdentityServerHost.UI.UnitTests;
 public class WhenUsingIdentityLogin
 {
-    private LoginModel _loginModel;
-    private Mock<IAuthenticationService> _authServiceMock;
-    private Mock<SignInManager<ApplicationIdentityUser>> _signInManagerMock;
+    private readonly LoginModel _loginModel;
+    private readonly Mock<IAuthenticationService> _authServiceMock;
+    private readonly Mock<SignInManager<ApplicationIdentityUser>> _signInManagerMock;
 
     public WhenUsingIdentityLogin()
     {
