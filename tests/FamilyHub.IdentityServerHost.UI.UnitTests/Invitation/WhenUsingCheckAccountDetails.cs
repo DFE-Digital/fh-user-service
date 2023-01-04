@@ -1,15 +1,24 @@
 ﻿using FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation;
 using FamilyHub.IdentityServerHost.Services;
 using FluentAssertions;
+using IdentityModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using System.Net.Http;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests.Invitation;
 
 public class WhenUsingCheckAccountDetails
 {
     private readonly CheckAccountDetailsModel _checkAccountDetailsModel;
+    
     public WhenUsingCheckAccountDetails()
     {
         Mock<IEmailSender> mockEmailSender = new Mock<IEmailSender>();
@@ -43,5 +52,39 @@ public class WhenUsingCheckAccountDetails
 
         //Assert
         exception.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task ThenPostingCheckAccountDetailsPage()
+    {
+        //Arrange
+        var mockUrlHelper = MockHelpers.CreateMockUrlHelper();
+        mockUrlHelper.Setup(h => h.RouteUrl(It.IsAny<UrlRouteContext>()))
+            .Returns("callbackUrl");
+        var httpContext = new DefaultHttpContext()
+        {
+        };
+        var modelState = new ModelStateDictionary();
+        var actionContext = new ActionContext(httpContext, new Microsoft.AspNetCore.Routing.RouteData(), new PageActionDescriptor(), modelState);
+        var modelMetadataProvider = new EmptyModelMetadataProvider();
+        var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+        // need page context for the page model
+        var pageContext = new PageContext(actionContext)
+        {
+            ViewData = viewData
+        };
+
+        
+        _checkAccountDetailsModel.PageContext = pageContext;
+        _checkAccountDetailsModel.Url = mockUrlHelper.Object;
+
+        //Act
+        var result = await _checkAccountDetailsModel.OnPost() as RedirectToPageResult;
+
+
+        //Assert
+        result.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(result, nameof(result));
+        result.PageName.Should().Be("/Invitation/Confirmation");
     }
 }

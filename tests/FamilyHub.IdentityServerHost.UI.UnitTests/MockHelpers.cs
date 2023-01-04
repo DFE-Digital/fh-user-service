@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -81,5 +82,36 @@ public static class MockHelpers
         lookupNormalizer.Setup(i => i.NormalizeName(It.IsAny<string>())).Returns(normalizerFunc);
         lookupNormalizer.Setup(i => i.NormalizeEmail(It.IsAny<string>())).Returns(normalizerFunc);
         return lookupNormalizer.Object;
+    }
+
+    public static Mock<IUrlHelper> CreateMockUrlHelper(ActionContext context = default!)
+    {
+        context ??= GetActionContextForPage("/Page");
+
+        var urlHelper = new Mock<IUrlHelper>();
+        urlHelper.SetupGet(h => h.ActionContext)
+            .Returns(context);
+        return urlHelper;
+    }
+
+    public static ActionContext GetActionContextForPage(string page)
+    {
+        return new()
+        {
+            ActionDescriptor = new()
+            {
+                RouteValues = new Dictionary<string, string?>
+            {
+                { "page", page },
+            }
+            },
+            RouteData = new()
+            {
+                Values =
+            {
+                [ "page" ] = page
+            }
+            }
+        };
     }
 }

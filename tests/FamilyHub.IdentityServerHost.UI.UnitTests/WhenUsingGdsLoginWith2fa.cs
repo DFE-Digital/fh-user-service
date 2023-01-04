@@ -9,12 +9,12 @@ using Moq;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests;
 
+#pragma warning disable CS0649
+
 public class WhenUsingGdsLoginWith2fa
 {
-    
-
     private readonly Mock<SignInManager<ApplicationIdentityUser>> _signInManagerMock;
-    private readonly Mock<UserManager<ApplicationIdentityUser>>? _userManagerMock;
+    private readonly Mock<UserManager<ApplicationIdentityUser>> _userManagerMock;
     private LoginWith2faModel _loginWith2FaModel;
     public WhenUsingGdsLoginWith2fa()
     {
@@ -149,7 +149,7 @@ public class WhenUsingGdsLoginWith2fa
         mySignInResult.SetSucceeded(false);
         _signInManagerMock.Setup(x => x.GetTwoFactorAuthenticationUserAsync()).ReturnsAsync(user);
         _signInManagerMock.Setup(x => x.TwoFactorAuthenticatorSignInAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>())).ReturnsAsync(mySignInResult);
-        _userManagerMock?.Setup(x => x.GetUserIdAsync(It.IsAny<ApplicationIdentityUser>())).ReturnsAsync(user.Id);
+        _userManagerMock.Setup(x => x.GetUserIdAsync(It.IsAny<ApplicationIdentityUser>())).ReturnsAsync(user.Id);
 
         //Act
         var result = await _loginWith2FaModel.OnPostAsync(true, "/Index") as RedirectToPageResult;
@@ -158,3 +158,5 @@ public class WhenUsingGdsLoginWith2fa
         _loginWith2FaModel.ModelState.IsValid.Should().BeFalse();
     }
 }
+
+#pragma warning restore CS0649

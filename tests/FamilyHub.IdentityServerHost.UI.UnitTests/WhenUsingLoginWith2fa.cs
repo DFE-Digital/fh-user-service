@@ -9,13 +9,15 @@ using Moq;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests;
 
+#pragma warning disable CS0649
 public class WhenUsingLoginWith2fa
 {
-    private Mock<SignInManager<ApplicationIdentityUser>> _signInManagerMock;
-    private Mock<UserManager<ApplicationIdentityUser>>? _userManagerMock;
-    private LoginWith2faModel _loginWith2FaModel;
+    private readonly Mock<SignInManager<ApplicationIdentityUser>> _signInManagerMock;
+    private readonly Mock<UserManager<ApplicationIdentityUser>> _userManagerMock;
+    private readonly LoginWith2faModel _loginWith2FaModel;
     public WhenUsingLoginWith2fa()
     {
+
         _userManagerMock = new Mock<UserManager<ApplicationIdentityUser>>(
                         /* IUserStore<TUser> store */Mock.Of<IUserStore<ApplicationIdentityUser>>(),
                         /* IOptions<IdentityOptions> optionsAccessor */null,
@@ -26,6 +28,7 @@ public class WhenUsingLoginWith2fa
                         /* IdentityErrorDescriber errors */null,
                         /* IServiceProvider services */null,
                         /* ILogger<UserManager<TUser>> logger */null);
+
 
         _signInManagerMock = new Mock<SignInManager<ApplicationIdentityUser>>(
             _userManagerMock.Object,
@@ -98,7 +101,7 @@ public class WhenUsingLoginWith2fa
         mySignInResult.SetSucceeded(true);
         _signInManagerMock.Setup(x => x.GetTwoFactorAuthenticationUserAsync()).ReturnsAsync(user);
         _signInManagerMock.Setup(x => x.TwoFactorAuthenticatorSignInAsync(It.IsAny<string>(),It.IsAny<bool>(), It.IsAny<bool>())).ReturnsAsync(mySignInResult);
-        _userManagerMock?.Setup(x => x.GetUserIdAsync(It.IsAny<ApplicationIdentityUser>())).ReturnsAsync(user.Id);
+        _userManagerMock.Setup(x => x.GetUserIdAsync(It.IsAny<ApplicationIdentityUser>())).ReturnsAsync(user.Id);
 
         //Act
         var result = await _loginWith2FaModel.OnPostAsync(true, "/Index") as RedirectToPageResult;
@@ -156,3 +159,5 @@ public class WhenUsingLoginWith2fa
         _loginWith2FaModel.ModelState.IsValid.Should().BeFalse();
     }
 }
+
+#pragma warning restore CS0649
