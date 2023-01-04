@@ -1,7 +1,6 @@
 ﻿using FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation;
 using FamilyHub.IdentityServerHost.Services;
 using FluentAssertions;
-using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using System.Net.Http;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests.Invitation;
 
