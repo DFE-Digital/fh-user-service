@@ -1,23 +1,16 @@
-﻿using FamilyHub.IdentityServerHost.Areas.Gds.Pages.Invitation;
-using FamilyHub.IdentityServerHost.Areas.Gds.Pages.MyAccount;
+﻿using FamilyHub.IdentityServerHost.Areas.Gds.Pages.MyAccount;
 using FamilyHub.IdentityServerHost.Models.Entities;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
 using System.Security.Claims;
-using NuGet.Configuration;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests.MyAccount;
 
