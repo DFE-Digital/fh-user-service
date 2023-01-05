@@ -1,15 +1,9 @@
 ﻿using FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
-using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Services;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests.Manage;
 
