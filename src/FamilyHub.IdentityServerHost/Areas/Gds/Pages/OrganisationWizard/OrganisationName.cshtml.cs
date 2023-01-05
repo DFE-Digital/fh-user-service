@@ -3,7 +3,6 @@ using FamilyHub.IdentityServerHost.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Build.Framework;
-using NuGet.Configuration;
 
 namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.OrganisationWizard;
 
@@ -33,8 +32,7 @@ public class OrganisationNameModel : PageModel
         NewOrganisation = _redisCacheService.RetrieveNewOrganisation();
         if (NewOrganisation != null)
         {
-            Name = NewOrganisation?.Name ?? string.Empty;
-            
+            Name = NewOrganisation?.Name ?? string.Empty;           
         }
 
         InitPage();
@@ -69,7 +67,7 @@ public class OrganisationNameModel : PageModel
         {
             switch (NewOrganisation.OrganisationTypeDto.Name)
             {
-                case "VCS":
+                case "VCFS":
                     HeadingLabelQuestion = "What is the Voluntary and community sector name?";
                     break;
 
