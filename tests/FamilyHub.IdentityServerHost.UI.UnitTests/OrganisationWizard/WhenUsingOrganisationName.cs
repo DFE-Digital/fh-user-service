@@ -27,20 +27,12 @@ public class WhenUsingOrganisationName
 
     public void ThenGettingOrganisationNamePage(string name, string headingName)
     {
-        //Arrange
-        OrganisationTypeDto organisationTypeDto;
-        switch(name)
+        OrganisationTypeDto organisationTypeDto = name switch
         {
-            case "LA":
-                organisationTypeDto = new OrganisationTypeDto("1", "LA", "Local Authority");
-                break;
-            case "VCFS":
-                organisationTypeDto = new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector");
-                break;
-            default:
-                organisationTypeDto = new OrganisationTypeDto("4", "Company", "Public / Private Company eg: Child Care Centre");
-                break;
-        }
+            "LA" => new OrganisationTypeDto("1", "LA", "Local Authority"),
+            "VCFS" => new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
+            _ => new OrganisationTypeDto("4", "Company", "Public / Private Company eg: Child Care Centre"),
+        };
         _redisCacheServiceMock.Setup(x => x.RetrieveNewOrganisation()).Returns(new NewOrganisation { Name = "Test Organisation", OrganisationId = Guid.NewGuid().ToString(), ParentName = "ParentOrganisation", OrganisationTypeDto = organisationTypeDto });
 
         //Act
@@ -57,21 +49,12 @@ public class WhenUsingOrganisationName
 
     public void ThenPostingOrganisationNamePageWithInvalidModel(string name, string headingName)
     {
-        //Arrange
-        OrganisationTypeDto organisationTypeDto;
-        switch (name)
+        OrganisationTypeDto organisationTypeDto = name switch
         {
-            case "LA":
-                organisationTypeDto = new OrganisationTypeDto("1", "LA", "Local Authority");
-                break;
-            case "VCFS":
-                organisationTypeDto = new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector");
-                break;
-            default:
-                organisationTypeDto = new OrganisationTypeDto("4", "Company", "Public / Private Company eg: Child Care Centre");
-                break;
-        }
-
+            "LA" => new OrganisationTypeDto("1", "LA", "Local Authority"),
+            "VCFS" => new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
+            _ => new OrganisationTypeDto("4", "Company", "Public / Private Company eg: Child Care Centre"),
+        };
         _organisationNameModel.NewOrganisation = new NewOrganisation { Name = "Test Organisation", OrganisationId = Guid.NewGuid().ToString(), ParentName = "ParentOrganisation", OrganisationTypeDto = organisationTypeDto };
         _redisCacheServiceMock.Setup(x => x.RetrieveNewOrganisation()).Returns(_organisationNameModel.NewOrganisation);
         _organisationNameModel.ModelState.AddModelError("Name", "Name is required");
@@ -87,7 +70,6 @@ public class WhenUsingOrganisationName
     }
 
     [Fact]
-
     public void ThenPostingOrganisationNamePage()
     {
         //Arrange
