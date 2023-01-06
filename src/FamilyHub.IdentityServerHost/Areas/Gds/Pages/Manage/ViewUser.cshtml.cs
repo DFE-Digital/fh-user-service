@@ -9,10 +9,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Net.Mail;
-using System.Text.Encodings.Web;
 using System.Text;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using System.Text.Encodings.Web;
 
 namespace FamilyHub.IdentityServerHost.Areas.Gds.Pages.Manage;
 

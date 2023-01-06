@@ -1,17 +1,12 @@
 ﻿using FamilyHub.IdentityServerHost.Areas.Gds.Pages.MyAccount;
 using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Persistence.Repository;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Claims;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Moq;
+using System.Security.Claims;
 
 namespace FamilyHub.IdentityServerHost.UI.UnitTests.MyAccount;
 
