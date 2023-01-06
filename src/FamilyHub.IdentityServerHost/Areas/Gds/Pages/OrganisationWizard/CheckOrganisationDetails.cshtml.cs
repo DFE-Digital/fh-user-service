@@ -1,5 +1,4 @@
 using FamilyHub.IdentityServerHost.Models;
-using FamilyHub.IdentityServerHost.Models.Entities;
 using FamilyHub.IdentityServerHost.Services;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
