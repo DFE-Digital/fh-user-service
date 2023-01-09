@@ -29,15 +29,25 @@ Then("the DfE Admin is redirected to View Organisations Page", () => {
     cy.location('pathname').should('match', new RegExp("/Gds/Manage/ViewOrganisations"));
 });
 
-//
-
 Given("a DfE Admin is on the View Organisations page", () => {
     cy.userservicelogin("DfEAdmin@email.com", "Pass123$")
     cy.get('a[href*="/Gds/Manage/ViewOrganisations"]').click();
 });
 
-When("the DfE Admin selects the Filter", (datatable) => {
-    datatable.forEach()
+When("the DfE Admin selects the Filter", () => {
+    
+});
+
+Then("I should select {string} with {string}", (value,text) => {
+
+    cy.get('#' + value).check();
+    cy.get('button[type=submit]').click();
+    cy.get("tr td:nth-child(2)")       //Gets the 2nd child in td column
+        .eq(1)                        //Yields second matching css element 
+        .contains(text)
+        .should('be.visible')
+
+    
 });
 
 

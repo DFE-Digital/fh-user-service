@@ -10,14 +10,14 @@ Scenario: DfE Admin logins and navigates to Manage LA and VCS
     When the DfE Admin clicks on the 'Manage local authorities and voluntary community organisations' link
     Then the DfE Admin is redirected to View Organisations Page
 
-Scenario: DfEAdmin on the View Organisations Uses Filters
+Scenario Outline: DfEAdmin on the View Organisations Uses Filters
     Given a DfE Admin is on the View Organisations page
     When the DfE Admin selects the Filter
-    Then the results only contain those results
+    Then I should select "<value>" with "<text>"
     Examples:
-        | Checkbox |
-        | Local Authority |
-        | Voluntary, Charitable, Faith Sector |
-        | Family Hub |
-        | Public / Private Company eg: Child Care Centre |
+        | value | text |
+        | LA | Local Authority |
+        #| VCFS | Voluntary, Charitable, Faith Sector
+        | FamilyHub | Family Hub |
+        #| Company | Public / Private Company eg: Child Care Centre |
 
