@@ -21,3 +21,8 @@ Scenario Outline: DfEAdmin on the View Organisations Uses Filters
         | FamilyHub | Family Hub |
         #| Company | Public / Private Company eg: Child Care Centre |
 
+Scenario: DfE Admin logins and navigates to Manage LA and VCS
+    Given a DfE Admin logs in and goes to Manage local authorities and voluntary community organisations page
+    When the DfE Admin clicks all the filters follwed by apply filter button
+    Then presses clear filters link and the apply filter button, all results are shown
+

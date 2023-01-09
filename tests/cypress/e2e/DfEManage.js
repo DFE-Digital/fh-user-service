@@ -45,9 +45,32 @@ Then("I should select {string} with {string}", (value,text) => {
     cy.get("tr td:nth-child(2)")       //Gets the 2nd child in td column
         .eq(1)                        //Yields second matching css element 
         .contains(text)
-        .should('be.visible')
+        .should('be.visible');
 
     
 });
 
 
+Given("a DfE Admin logs in and goes to Manage local authorities and voluntary community organisations page", () => {
+    cy.userservicelogin("DfEAdmin@email.com", "Pass123$")
+    cy.get('a[href*="/Gds/Manage/ViewOrganisations"]').click();
+});
+
+When("the DfE Admin clicks all the filters follwed by apply filter button", () => {
+    cy.get('#LA').check();
+    cy.get('#VCFS').check();
+    cy.get('#FamilyHub').check();
+    cy.get('#Company').check();
+    cy.get('button[type=submit]').click();
+    cy.get(".govuk-table").find("tr").find("td").contains("Family Hub");
+    cy.get(".govuk-table").find("tr").find("td").contains("Local Authority");
+    cy.get('[type="checkbox"]').should('be.checked');
+});
+
+Then("presses clear filters link and the apply filter button, all results are shown", () => {
+    cy.get('a[href*="/Gds/Manage/ViewOrganisations?handler=ClearFilter"]').click();
+    cy.get('button[type=submit]').click();
+    cy.get(".govuk-table").find("tr").find("td").contains("Family Hub");
+    cy.get(".govuk-table").find("tr").find("td").contains("Local Authority");  
+    cy.get('[type="checkbox"]').should('not.be.checked');
+});
