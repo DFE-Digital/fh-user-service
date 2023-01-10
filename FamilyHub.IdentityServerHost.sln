@@ -8,8 +8,20 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHub.IdentityServerHost", "src\FamilyHub.IdentityServerHost\FamilyHub.IdentityServerHost.csproj", "{90F825AC-DBDB-4AC2-B8EA-20DD18C318BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5872F004-6F24-45B0-ABD2-F2A84F03E73A}"
+	ProjectSection(SolutionItems) = preProject
+		tests\cypress.config.js = tests\cypress.config.js
+		tests\package.json = tests\package.json
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHub.IdentityServerHost.UI.UnitTests", "tests\FamilyHub.IdentityServerHost.UI.UnitTests\FamilyHub.IdentityServerHost.UI.UnitTests.csproj", "{8D0C789D-56BA-4D74-A2B6-A295F349A435}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cypress", "cypress", "{06D8ABED-E429-4B3E-808C-44CEAA11EC11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2e", "e2e", "{FB966411-8C59-4B63-84D2-8D012DE1865C}"
+	ProjectSection(SolutionItems) = preProject
+		startnow.feature = startnow.feature
+		startnow.js = startnow.js
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +44,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{90F825AC-DBDB-4AC2-B8EA-20DD18C318BE} = {FB87F5D0-F2A3-42A3-8D96-7F1AB9B21529}
 		{8D0C789D-56BA-4D74-A2B6-A295F349A435} = {5872F004-6F24-45B0-ABD2-F2A84F03E73A}
+		{06D8ABED-E429-4B3E-808C-44CEAA11EC11} = {5872F004-6F24-45B0-ABD2-F2A84F03E73A}
+		{FB966411-8C59-4B63-84D2-8D012DE1865C} = {06D8ABED-E429-4B3E-808C-44CEAA11EC11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D9DFF51-07A2-4212-837D-70AE387FBCF4}
