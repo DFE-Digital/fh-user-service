@@ -21,7 +21,7 @@ Given("a DfE Admin logs in and goes to Manage local authorities and voluntary co
     cy.get('#login-submit').click();
 });
 
-When("the DfE Admin clicks on the 'Manage local authorities and voluntary community organisations' link", (username, password) => {
+When("the DfE Admin clicks on the 'Manage local authorities and voluntary community organisations' link", () => {
     cy.get('a[href*="/Gds/Manage/ViewOrganisations"]').click();
 });
 
