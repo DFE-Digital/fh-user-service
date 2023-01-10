@@ -6,6 +6,7 @@
 <a asp-page="/Manage/ViewUsers" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <h1 class="govuk-heading-xl">@Model.DisplayApplicationUser.UserName</h1>
     <form method="post">
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
         <div class="govuk-summary-list__row">
@@ -74,7 +75,7 @@
 
     </dl>
     
-        <button class="govuk-button">Save details</button>
+        @*<button class="govuk-button">Save details</button>*@
     </form>
     <p><a asp-page="/Manage/ViewUsers">Back to manage user accounts</a></p>
 
