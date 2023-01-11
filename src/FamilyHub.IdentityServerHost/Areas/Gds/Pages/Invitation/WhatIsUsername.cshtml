@@ -41,7 +41,7 @@ else
         {
             <p class="govuk-error-message">
                 <span class="govuk-visually-hidden" data-testid="name-enter-validation">Error:</span>
-                <span asp-validation-for="@Model.FullName"></span>
+                    <span id="name-error" asp-validation-for="@Model.FullName"></span>
             </p>
         }
       
